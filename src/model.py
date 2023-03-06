@@ -1,5 +1,6 @@
-
 card_x_pos = [25 + 100 * i for i in range(10)]
+
+
 class NumberCardsHandler:
     def __init__(self, num_array, number_cards):
         self.num_array = num_array
@@ -21,21 +22,6 @@ class NumberCardsHandler:
             self.num_array[index1], self.num_array[index2] = self.num_array[index2], self.num_array[index1]
         self.rotation(index1, index2)
 
-# class SortingAlgo:
-#     def selection_sort(self, array, size):
-#         numbers_handler = NumberCardsHandler(array)
-#         for step in range(size):
-#             min_idx = step
-#
-#             for i in range(step + 1, size):
-#
-#                 # to sort in descending order, change > to < in this line
-#                 # select the minimum element in each loop
-#                 if array[i] < array[min_idx]:
-#                     min_idx = i
-#
-#             # put min at the correct position
-#             yield step, min_idx
 
 class Model:
     def __init__(self, controller):
@@ -55,4 +41,3 @@ class Model:
                     self.min_idx = i
 
         self.num_cards_handler.move_numbers(self.step, self.min_idx)
-

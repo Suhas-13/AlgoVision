@@ -1,6 +1,10 @@
+import pygame
+import sys
+import time
+
 import model
 from view import View
-import pygame, sys, time
+
 
 class Controller:
     def __init__(self):
@@ -11,11 +15,10 @@ class Controller:
         self.model = model.Model(self)
         self.view = View(self)
 
-        self.switching = False
-
     def register_number_cards(self, number_card):
         self.number_cards.append(number_card)
         self.surfaces.append(number_card)
+
     def check_exit(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -33,4 +36,3 @@ class Controller:
 
             pygame.display.update()
             time.sleep(0.016)
-

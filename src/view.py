@@ -3,6 +3,8 @@ import pygame
 from constants import *
 
 card_x_pos = [25 + 100 * i for i in range(10)]
+
+
 class Text:
     def __init__(self, text, x, y, size, draw_background=False, rect_color=None, rect_size=None):
         self.text = text
@@ -50,6 +52,7 @@ class Button(Text):
         if pygame.mouse.get_pressed()[0] is False:
             self.clicked = False  # set to prevent double click, while not pressing mouse, it is ready for next click
 
+
 class NumCard(Text):
     def __init__(self, text, x, y, size):
         Text.__init__(self, text, x, y, size, True, (233, 233, 233), (50, 50))
@@ -57,6 +60,8 @@ class NumCard(Text):
     def moveto(self, x, y):
         self.x = x
         self.y = y
+
+
 class View:
     def __init__(self, controller):
         pygame.init()
@@ -67,37 +72,9 @@ class View:
 
         self.init_number_cards(self.controller.numbers)
 
-        self.first_index, self.second_index = None, None
-
     def init_number_cards(self, num_arr):
         for idx, num in enumerate(num_arr):
             self.controller.register_number_cards(NumCard(str(num), card_x_pos[idx], 300, 32))
 
-    # index1 has to be smaller than index2
-    def rotation(self, index1, index2):
-        card1, card2 = self.controller.number_cards[index1], self.controller.number_cards[index2]
-        card1.move(index2)
-        card2.move(index1)
-        if card1.x == card_x_pos[index2] and card2.x == card_x_pos[index1]:
-            self.controller.number_cards[index1], self.controller.number_cards[index2] = card2, card1
-            self.first_index, self.second_index = None, None
-
     def update(self):
         self.canvas.fill(WHITE)
-        # number_cards_val = [int(card.text) for card in self.controller.number_cards]
-        #
-        # if not self.controller.switching:
-        #     for i in range(10):
-        #         if number_cards_val[i] != self.controller.numbers[i]:
-        #             if self.first_index is None:
-        #                 self.first_index = i
-        #             else:
-        #                 self.second_index = i
-        #
-        # self.rotation(self.first_index, self.second_index)
-
-
-
-
-
-
