@@ -136,3 +136,6 @@ def sort3_page():
     pass
 
 main_menu()
+
+
+#its not finished yet i dont like the way it looks
