@@ -57,13 +57,34 @@ class Button(Text):
 
 
 class NumCard(Text):
+    
+
     def __init__(self, text, x, y, size):
         Text.__init__(self, text, x, y, size, True, LIGHT_GREY, (50, 50))
+        # add border
+        self.highlighted = False
+        
+
 
     def moveto(self, x, y):
         self.x = x
         self.y = y
 
+    def unhighlight(self):
+        self.highlighted = False
+        self.background_surface = pygame.Surface((self.rect_size[0], self.rect_size[1]))
+        self.background_surface.fill(self.rect_color)
+        self.background_surface.blit(self.text_surface,
+                                     ((self.background_surface.get_width() - self.text_rect.width) // 2,
+                                      (self.background_surface.get_height() - self.text_rect.height) // 2))
+    def highlight(self):
+        self.highlighted = True
+        self.border = pygame.Surface((self.rect_size[0] + 2, self.rect_size[1] + 2))
+        self.border.fill(GREEN)
+        self.border.blit(self.background_surface, (1, 1))
+        self.background_surface = self.border
+        #self.background_surface.fill(GREEN)
+    
 class CodeBlock:
     def __init__(self, x, y, width, height, rect_color):
         self.x = x
@@ -77,6 +98,9 @@ class CodeBlock:
 
     def draw(self, screen):
         screen.blit(self.background_surface, (self.x, self.y))
+    
+
+        
 
 
 

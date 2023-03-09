@@ -8,7 +8,7 @@ from view import View
 
 class Controller:
     def __init__(self):
-        self.numbers = [6, 7, 8, 9, 10, 5, 4, 3, 2, 1]
+        self.numbers = [6, 7, 8, 9, 10, 5, 4, 3, 1, 2]
         self.number_cards = []
         self.code_blocks = []
         self.buttons = []
@@ -55,4 +55,6 @@ class Controller:
             self.model.update()
 
             pygame.display.update()
-            time.sleep(0.0167)
+            #pygame.time.wait(5)
+            #time.sleep(0.0167)
+            #ime.sleep(0.0067)
