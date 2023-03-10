@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from random import randint, shuffle
 
 import random
 
@@ -102,4 +103,23 @@ class BubbleSort(SortingAlgorithm):
                         NumberCardOperations.create_compare_operation(j, j + 1))
                     moves.append(
                         NumberCardOperations.create_swap_operation(j, j + 1))
+        return moves
+
+class BogoSort(SortingAlgorithm):
+    def __init__(self, array):
+        super().__init__(array)
+
+    def get_moves(self):
+        moves = []
+        solution = sorted(self.array)
+        current = self.array.copy()
+
+        while current != solution:
+            i = randint(0, len(self.array) - 1)
+            j = i
+            while j == i:
+                j = randint(0, len(self.array) - 1)
+            moves.append(NumberCardOperations.create_swap_operation(i, j))
+            current[i], current[j] = current[j], current[i]
+
         return moves
