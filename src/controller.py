@@ -50,11 +50,7 @@ class Controller:
             self.check_button_click()
 
             self.view.update()
+            self.model.update()
             for surface in self.surfaces:
                 surface.draw(self.view.canvas)
-            self.model.update()
-
             pygame.display.update()
-            #pygame.time.wait(5)
-            #time.sleep(0.0167)
-            #ime.sleep(0.0067)

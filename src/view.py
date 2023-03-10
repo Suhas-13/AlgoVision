@@ -38,7 +38,8 @@ class Text:
 
 class Button(Text):
     def __init__(self, text, x, y, size, draw_background=False, rect_color=None, rect_size=None):
-        Text.__init__(self, text, x, y, size, draw_background, rect_color, rect_size)
+        Text.__init__(self, text, x, y, size,
+                      draw_background, rect_color, rect_size)
 
         self.clicked = False
 
@@ -51,20 +52,16 @@ class Button(Text):
                 return True
 
         if pygame.mouse.get_pressed()[0] is False:
-            self.clicked = False  # set to prevent double click, while not pressing mouse, it is ready for next click
-
-
+            # set to prevent double click, while not pressing mouse, it is ready for next click
+            self.clicked = False
 
 
 class NumCard(Text):
-    
 
     def __init__(self, text, x, y, size):
         Text.__init__(self, text, x, y, size, True, LIGHT_GREY, (50, 50))
         # add border
         self.highlighted = False
-        
-
 
     def moveto(self, x, y):
         self.x = x
@@ -72,19 +69,24 @@ class NumCard(Text):
 
     def unhighlight(self):
         self.highlighted = False
-        self.background_surface = pygame.Surface((self.rect_size[0], self.rect_size[1]))
+        self.background_surface = pygame.Surface(
+            (self.rect_size[0], self.rect_size[1]))
         self.background_surface.fill(self.rect_color)
         self.background_surface.blit(self.text_surface,
                                      ((self.background_surface.get_width() - self.text_rect.width) // 2,
                                       (self.background_surface.get_height() - self.text_rect.height) // 2))
+
     def highlight(self):
+        if self.highlighted:
+            return
         self.highlighted = True
-        self.border = pygame.Surface((self.rect_size[0] + 2, self.rect_size[1] + 2))
+        self.border = pygame.Surface(
+            (self.rect_size[0] + 2, self.rect_size[1] + 2))
         self.border.fill(GREEN)
         self.border.blit(self.background_surface, (1, 1))
         self.background_surface = self.border
-        #self.background_surface.fill(GREEN)
-    
+
+
 class CodeBlock:
     def __init__(self, x, y, width, height, rect_color):
         self.x = x
@@ -98,10 +100,6 @@ class CodeBlock:
 
     def draw(self, screen):
         screen.blit(self.background_surface, (self.x, self.y))
-    
-
-        
-
 
 
 class View:
@@ -118,18 +116,22 @@ class View:
 
     def init_number_cards(self, num_arr):
         for idx, num in enumerate(num_arr):
-            self.controller.register_number_cards(NumCard(str(num), CARD_X_POS[idx], CARD_Y_POS, 32))
+            self.controller.register_number_cards(
+                NumCard(str(num), CARD_X_POS[idx], CARD_Y_POS, 32))
 
     def init_code_blocks(self):
-        self.controller.register_code_block(CodeBlock(25, 100, 375, 575, (0, 0, 0)))
+        self.controller.register_code_block(
+            CodeBlock(25, 100, 375, 575, (0, 0, 0)))
 
     def init_buttons(self):
-        self.controller.register_button(Button("Play", 25, 40, 24, True, LIGHT_GREY, (75, 40)))
-        self.controller.register_button(Button("Pause", 125, 40, 24, True, LIGHT_GREY, (75, 40)))
-        self.controller.register_button(Button("Last", 225, 40, 24, True, LIGHT_GREY, (75, 40)))
-        self.controller.register_button(Button("Next", 325, 40, 24, True, LIGHT_GREY, (75, 40)))
-
-
+        self.controller.register_button(
+            Button("Play", 25, 40, 24, True, LIGHT_GREY, (75, 40)))
+        self.controller.register_button(
+            Button("Pause", 125, 40, 24, True, LIGHT_GREY, (75, 40)))
+        self.controller.register_button(
+            Button("Last", 225, 40, 24, True, LIGHT_GREY, (75, 40)))
+        self.controller.register_button(
+            Button("Next", 325, 40, 24, True, LIGHT_GREY, (75, 40)))
 
     def update(self):
         self.canvas.fill(WHITE)
