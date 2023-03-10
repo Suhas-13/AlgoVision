@@ -55,6 +55,7 @@ class NumberCardsHandler:
         if not self.rotating:
             self.num_array[index1], self.num_array[index2] = self.num_array[index2], self.num_array[index1]
         self.rotation(index1, index2)
+        # highlight the cards
 
 
 class Model:
@@ -62,7 +63,6 @@ class Model:
         self.controller = controller
         self.num_cards_handler = NumberCardsHandler(
             self.controller.numbers, self.controller.number_cards)
-
         self.moves = SelectionSort(self.controller.numbers.copy()).get_moves()
         self.current_move = None
         self.current_move_idx = 0
@@ -78,7 +78,7 @@ class Model:
         self.num_cards_handler.time_since_rotation += 1
         if self.num_cards_handler.time_since_rotation < 10:
             return
-        
+
         if not self.num_cards_handler.rotating:
             if self.current_move_idx == len(self.moves):
                 self.pause = True
@@ -86,18 +86,19 @@ class Model:
                 return
             self.current_move = self.moves[self.current_move_idx]
             if self.prev_move is not None and self.prev_move[0] == NumberCardOperations.COMPARE:
-                    if self.current_move[0] == NumberCardOperations.SWAP:
-                        pygame.time.delay(1000)
-                    self.controller.number_cards[self.prev_move[1]].unhighlight()
-                    self.controller.number_cards[self.prev_move[2]].unhighlight()
+                if self.current_move[0] == NumberCardOperations.SWAP:
+                    pygame.time.delay(1000)
+                self.controller.number_cards[self.prev_move[1]].unhighlight()
+                self.controller.number_cards[self.prev_move[2]].unhighlight()
+
             if self.current_move[0] == NumberCardOperations.SWAP:
                 self.num_cards_handler.move_numbers(
                     self.current_move[1], self.current_move[2])
                 self.num_cards_handler.rotating = True
             elif self.current_move[0] == NumberCardOperations.COMPARE:
                 self.controller.number_cards[self.current_move[1]].highlight()
-                self.controller.number_cards[self.current_move[2]].highlight() 
-                pygame.time.delay(300)
+                self.controller.number_cards[self.current_move[2]].highlight()
+                pygame.time.delay(400)
             self.prev_move = self.current_move
             self.current_move_idx += 1
         else:

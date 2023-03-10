@@ -1,26 +1,30 @@
 from abc import ABC, abstractmethod
 
+import random
+
 
 class NumberCardOperations:
     SWAP: int = 1
     COMPARE: int = 2
     HIGH_LIGHT: int = 3
+
     @staticmethod
     def create_swap_operation(index1: int, index2: int) -> tuple:
         min_index = min(index1, index2)
         max_index = max(index1, index2)
         return (NumberCardOperations.SWAP, min_index, max_index)
-    
+
     @staticmethod
     def create_compare_operation(index1: int, index2: int) -> tuple:
         min_index = min(index1, index2)
         max_index = max(index1, index2)
         return (NumberCardOperations.COMPARE, min_index, max_index)
-    
+
     @staticmethod
     def create_highlight_operation(index: int) -> tuple:
         return (NumberCardOperations.HIGH_LIGHT, index)
-    
+
+
 class SortingAlgorithm(ABC):
 
     @abstractmethod
@@ -32,6 +36,7 @@ class SortingAlgorithm(ABC):
         moves = []
         return moves
 
+
 class SelectionSort(SortingAlgorithm):
     def __init__(self, array):
         super().__init__(array)
@@ -41,14 +46,19 @@ class SelectionSort(SortingAlgorithm):
         for i in range(len(self.array)):
             min_idx = i
             for j in range(i + 1, len(self.array)):
-                moves.append(NumberCardOperations.create_compare_operation(j, i))
+                moves.append(
+                    NumberCardOperations.create_compare_operation(j, i))
                 if self.array[j] < self.array[min_idx]:
                     min_idx = j
             self.array[i], self.array[min_idx] = self.array[min_idx], self.array[i]
-            moves.append(NumberCardOperations.create_compare_operation(i, min_idx))
-            moves.append(NumberCardOperations.create_compare_operation(i, min_idx))
-            moves.append(NumberCardOperations.create_swap_operation(i, min_idx))
-        return moves    
+            moves.append(
+                NumberCardOperations.create_compare_operation(i, min_idx))
+            moves.append(
+                NumberCardOperations.create_swap_operation(i, min_idx))
+        print(moves)
+        return moves
+
+
 class InsertionSort(SortingAlgorithm):
     def __init__(self, array):
         super().__init__(array)
@@ -61,12 +71,16 @@ class InsertionSort(SortingAlgorithm):
             moves.append(NumberCardOperations.create_compare_operation(i, j))
             while j >= 0 and key < self.array[j]:
                 self.array[j + 1] = self.array[j]
-                moves.append(NumberCardOperations.create_compare_operation(i, j))
-                moves.append(NumberCardOperations.create_compare_operation(i, j))
-                moves.append(NumberCardOperations.create_swap_operation(j, j + 1))
+                moves.append(
+                    NumberCardOperations.create_compare_operation(i, j))
+                moves.append(
+                    NumberCardOperations.create_compare_operation(i, j))
+                moves.append(
+                    NumberCardOperations.create_swap_operation(j, j + 1))
                 j -= 1
             self.array[j + 1] = key
         return moves
+
 
 class BubbleSort(SortingAlgorithm):
     def __init__(self, array):
@@ -74,9 +88,18 @@ class BubbleSort(SortingAlgorithm):
 
     def get_moves(self):
         moves = []
-        for i in range(len(self.array)):
-            for j in range(len(self.array) - i - 1):
+        n = len(self.array)
+        for i in range(n):
+            for j in range(0, n - i - 1):
+                moves.append(
+                    NumberCardOperations.create_compare_operation(j, j + 1))
                 if self.array[j] > self.array[j + 1]:
-                    self.array[j], self.array[j + 1] = self.array[j + 1], self.array[j]
-                    moves.append(NumberCardOperations.create_swap_operation(j, j + 1))
+                    self.array[j], self.array[j +
+                                              1] = self.array[j + 1], self.array[j]
+                    moves.append(
+                        NumberCardOperations.create_compare_operation(j, j + 1))
+                    moves.append(
+                        NumberCardOperations.create_compare_operation(j, j + 1))
+                    moves.append(
+                        NumberCardOperations.create_swap_operation(j, j + 1))
         return moves
