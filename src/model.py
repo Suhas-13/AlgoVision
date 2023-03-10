@@ -1,6 +1,6 @@
 from constants import *
 from math import sin, cos, radians, sqrt
-from sorting import SelectionSort, BogoSort, InsertionSort, BubbleSort, NumberCardOperations
+from sorting import SelectionSort, InsertionSort, BubbleSort, NumberCardOperations
 import pygame
 import time
 
@@ -63,7 +63,7 @@ class Model:
         self.controller = controller
         self.num_cards_handler = NumberCardsHandler(
             self.controller.numbers, self.controller.number_cards)
-        self.moves = BogoSort(self.controller.numbers.copy()).get_moves()
+        self.moves = SelectionSort(self.controller.numbers.copy()).get_moves()
         self.current_move = None
         self.current_move_idx = 0
 
