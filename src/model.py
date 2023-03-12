@@ -6,8 +6,7 @@ import time
 
 
 class NumberCardsHandler:
-    def __init__(self, num_array, number_cards):
-        self.num_array = num_array
+    def __init__(self, number_cards):
         self.number_cards = number_cards
         self.rotating = False
         self.time_since_rotation = 0
@@ -49,11 +48,8 @@ class NumberCardsHandler:
             self.time_since_rotation = 0
             self.timer = 0
             self.number_cards[index1], self.number_cards[index2] = card2, card1
-            self.num_array[index1], self.num_array[index2] = self.num_array[index2], self.num_array[index1]
 
     def move_numbers(self, index1, index2):
-        if not self.rotating:
-            self.num_array[index1], self.num_array[index2] = self.num_array[index2], self.num_array[index1]
         self.rotation(index1, index2)
         # highlight the cards
 
@@ -61,16 +57,30 @@ class NumberCardsHandler:
 class Model:
     def __init__(self, controller):
         self.controller = controller
-        self.num_cards_handler = NumberCardsHandler(
-            self.controller.numbers, self.controller.number_cards)
-        self.moves = SelectionSort(self.controller.numbers.copy()).get_moves()
+        self.num_cards_handler = NumberCardsHandler(self.controller.number_cards)
+        self.moves = None
         self.current_move = None
         self.current_move_idx = 0
 
         self.pause = True
         self.prev_move = None
 
+    def change_numbers(self):
+        for idx, num_card in enumerate(self.controller.number_cards):
+            # has to convert to string temporarily to prevent value error (if the text is empty)
+            if num_card.text != str(self.controller.numbers[idx]):
+                self.controller.numbers[idx] = num_card.text
+
+    def start(self):
+        # convert back to int
+        self.controller.numbers = [int(num) for num in self.controller.numbers]
+        self.moves = SelectionSort(self.controller.numbers.copy()).get_moves()
+        self.pause = False
+        self.controller.allow_to_change = False
+
     def update(self):
+        if self.controller.allow_to_change:
+            self.change_numbers()
 
         if self.pause:
             return
@@ -96,8 +106,8 @@ class Model:
                     self.current_move[1], self.current_move[2])
                 self.num_cards_handler.rotating = True
             elif self.current_move[0] == NumberCardOperations.COMPARE:
-                self.controller.number_cards[self.current_move[1]].highlight()
-                self.controller.number_cards[self.current_move[2]].highlight()
+                self.controller.number_cards[self.current_move[1]].highlight(GREEN)
+                self.controller.number_cards[self.current_move[2]].highlight(GREEN)
                 pygame.time.delay(400)
             self.prev_move = self.current_move
             self.current_move_idx += 1

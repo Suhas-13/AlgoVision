@@ -32,6 +32,15 @@ class Text:
         self.text_surface = self.font.render(self.text, True, (0, 0, 0))
         self.text_rect = self.text_surface.get_rect()
 
+        if self.draw_background:
+            self.background_surface = pygame.Surface(self.rect_size)
+            self.background_surface.fill(self.rect_color)
+            self.background_surface.blit(self.text_surface,
+                                         ((self.background_surface.get_width() - self.text_rect.width) // 2,
+                                          (self.background_surface.get_height() - self.text_rect.height) // 2))
+        else:
+            self.background_surface = self.text_surface
+
     def draw(self, screen):
         screen.blit(self.background_surface, (self.x, self.y))  # draw text
 
@@ -56,12 +65,14 @@ class Button(Text):
             self.clicked = False
 
 
-class NumCard(Text):
+class NumCard(Button):
 
     def __init__(self, text, x, y, size):
-        Text.__init__(self, text, x, y, size, True, LIGHT_GREY, (50, 50))
+        Button.__init__(self, text, x, y, size, True, LIGHT_GREY, (50, 50))
         # add border
         self.highlighted = False
+
+        self.typable = False
 
     def moveto(self, x, y):
         self.x = x
@@ -69,22 +80,47 @@ class NumCard(Text):
 
     def unhighlight(self):
         self.highlighted = False
-        self.background_surface = pygame.Surface(
-            (self.rect_size[0], self.rect_size[1]))
-        self.background_surface.fill(self.rect_color)
-        self.background_surface.blit(self.text_surface,
-                                     ((self.background_surface.get_width() - self.text_rect.width) // 2,
-                                      (self.background_surface.get_height() - self.text_rect.height) // 2))
+        self.update(self.text)
 
-    def highlight(self):
+    def highlight(self, color):
         if self.highlighted:
             return
         self.highlighted = True
         self.border = pygame.Surface(
             (self.rect_size[0] + 2, self.rect_size[1] + 2))
-        self.border.fill(GREEN)
+        self.border.fill(color)
         self.border.blit(self.background_surface, (1, 1))
         self.background_surface = self.border
+
+    def type_in(self, event):
+        if event.key == pygame.K_RETURN:
+            self.typable = False
+            self.unhighlight()
+            return
+        if event.key == pygame.K_BACKSPACE:
+            self.text = self.text[:-1]
+        else:  # maximum length 2
+            self.text += event.unicode if len(self.text) <= 1 else ""
+        self.update(self.text)
+        self.highlighted = False
+        self.highlight(BLACK)
+
+    def set_typable(self, typable):
+        self.check_mouseclick()
+        if not typable:
+            self.typable = False
+            self.unhighlight()
+        elif typable:
+            self.typable = True
+            self.highlight(BLACK)
+            print("Typable")
+
+    def check_typable(self):
+        self.check_mouseclick()
+        if self.typable and self.clicked:
+            self.set_typable(False)
+        elif not self.typable and self.clicked:
+            self.set_typable(True)
 
 
 class CodeBlock:
