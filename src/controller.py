@@ -8,7 +8,7 @@ from view import View
 
 class Controller:
     def __init__(self):
-        self.numbers = ["6", "7", "8", "9", "10", "5", "4", "3", "1", "2"]
+        self.numbers = ["7", "1", "8", "3", "5", "9", "4", "10", "6", "2"]
         self.number_cards = []
         self.code_blocks = []
         self.buttons = []
@@ -18,6 +18,8 @@ class Controller:
         self.view = View(self)
         self.allow_to_change = True
         self.started = False
+
+        self.current_algo = "selection"
 
     def register_number_cards(self, number_card):
         self.number_cards.append(number_card)

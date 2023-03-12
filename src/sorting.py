@@ -8,6 +8,9 @@ class NumberCardOperations:
     SWAP: int = 1
     COMPARE: int = 2
     HIGH_LIGHT: int = 3
+    DIVIDE: int = 4
+    MERGE: int = 5
+    CLEAR: int = 6
 
     @staticmethod
     def create_swap_operation(index1: int, index2: int) -> tuple:
@@ -24,6 +27,18 @@ class NumberCardOperations:
     @staticmethod
     def create_highlight_operation(index: int) -> tuple:
         return (NumberCardOperations.HIGH_LIGHT, index)
+
+    @staticmethod
+    def create_divide_operation(index1: int, index2: int) -> tuple:
+        return (NumberCardOperations.DIVIDE, index1, index2)
+
+    @staticmethod
+    def create_merge_operation(index1: int, index2: int) -> tuple:
+        return (NumberCardOperations.MERGE, index1, index2)
+
+    @staticmethod
+    def create_clear_operation(index1: int, index2: int) -> tuple:
+        return (NumberCardOperations.CLEAR, index1, index2)
 
 
 class SortingAlgorithm(ABC):
@@ -123,3 +138,51 @@ class BogoSort(SortingAlgorithm):
             current[i], current[j] = current[j], current[i]
 
         return moves
+
+class MergeSort(SortingAlgorithm):
+    def __init__(self, array):
+        super().__init__(array)
+        self.moves = []
+        self.merge_sort(self.array, self.array.copy(), 0, len(self.array) - 1)
+        print(self.moves)
+        print(self.array)
+
+    def merge_sort(self, arr, aux, low, high):
+        if low < high:
+            mid = (low + high) // 2
+
+            self.moves.append(NumberCardOperations.create_divide_operation(low, mid))
+            self.moves.append(NumberCardOperations.create_divide_operation(mid + 1, high))
+            self.merge_sort(arr, aux, low, mid)
+
+            self.merge_sort(arr, aux, mid + 1, high)
+
+            self.merge(arr, aux, low, mid, high)
+
+    def merge(self, arr, aux, low, mid, high):
+        aux = arr.copy()
+
+        i = low
+        j = mid + 1
+        self.moves.append(NumberCardOperations.create_clear_operation(low, high))
+
+        for k in range(low, high + 1):
+            if i > mid:
+                arr[k] = aux[j]
+                self.moves.append(NumberCardOperations.create_merge_operation(k, j))
+                j += 1
+            elif j > high:
+                arr[k] = aux[i]
+                self.moves.append(NumberCardOperations.create_merge_operation(k, i))
+                i += 1
+            elif aux[j] < aux[i]:
+                arr[k] = aux[j]
+                self.moves.append(NumberCardOperations.create_merge_operation(k, j))
+                j += 1
+            else:
+                arr[k] = aux[i]
+                self.moves.append(NumberCardOperations.create_merge_operation(k, i))
+                i += 1
+
+    def get_moves(self):
+        return self.moves
