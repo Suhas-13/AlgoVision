@@ -150,7 +150,7 @@ class View:
         self.canvas.fill(WHITE)
         pygame.display.set_caption("AlgoVision")
 
-        self.init_number_cards(self.controller.numbers, is_merge_sort=True)
+        self.init_number_cards(self.controller.numbers, is_merge_sort=False)
         self.init_code_blocks()
         self.init_buttons()
 

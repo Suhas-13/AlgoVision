@@ -38,15 +38,15 @@ class NumberCardsHandler:
                         self.v0[gap] * sin(radians(self.angles[gap])) * self.timer - 0.5 * self.g * self.timer ** 2)
 
             card1.x, card1.y = CARD_X_POS[index1] + \
-                               round(distance[0]), CARD_Y_POS + round(distance[1])
+                               round(distance[0]), CARD_Y_POS[2] + round(distance[1])
             card2.x, card2.y = CARD_X_POS[index2] - \
-                               round(distance[0]), CARD_Y_POS - round(distance[1])
+                               round(distance[0]), CARD_Y_POS[2] - round(distance[1])
 
     def check_rotation_complete(self, index1, index2):
         card1, card2 = self.number_cards[index1], self.number_cards[index2]
         if card1.x < CARD_X_POS[index2] + 6 and card1.x > CARD_X_POS[index2] - 6:
-            card1.moveto(CARD_X_POS[index2], CARD_Y_POS)
-            card2.moveto(CARD_X_POS[index1], CARD_Y_POS)
+            card1.moveto(CARD_X_POS[index2], CARD_Y_POS[2])
+            card2.moveto(CARD_X_POS[index1], CARD_Y_POS[2])
             self.rotating = False
             self.time_since_rotation = 0
             self.timer = 0
@@ -118,7 +118,7 @@ class Model:
     def start(self):
         # convert back to int
         self.controller.numbers = [int(num) for num in self.controller.numbers]
-        self.moves = MergeSort(self.controller.numbers.copy()).get_moves()
+        self.moves = SelectionSort(self.controller.numbers.copy()).get_moves()
         self.pause = False
         self.controller.allow_to_change = False
 
