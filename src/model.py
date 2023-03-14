@@ -10,6 +10,9 @@ class NumberCardsHandler:
         self.num_array = num_array
         self.number_cards = number_cards
         self.rotating = False
+        self.prev_next_disabled = False
+
+
         self.time_since_rotation = 0
 
         self.g = 2
@@ -50,12 +53,26 @@ class NumberCardsHandler:
             self.timer = 0
             self.number_cards[index1], self.number_cards[index2] = card2, card1
             self.num_array[index1], self.num_array[index2] = self.num_array[index2], self.num_array[index1]
+            self.prev_next_disabled = False
+
+    def undo_rotation_immediately(self, index1, index2, reverse = False):
+        card1, card2 = self.number_cards[index1], self.number_cards[index2]
+        if reverse:
+            card1.moveto(CARD_X_POS[index2], CARD_Y_POS)
+            card2.moveto(CARD_X_POS[index1], CARD_Y_POS)
+            self.number_cards[index1], self.number_cards[index2] = card2, card1
+            self.num_array[index1], self.num_array[index2] = self.num_array[index2], self.num_array[index1]
+        else:
+            card1.moveto(CARD_X_POS[index1], CARD_Y_POS)
+            card2.moveto(CARD_X_POS[index2], CARD_Y_POS)
+            self.number_cards[index1], self.number_cards[index2] = card2, card1
+            self.num_array[index1], self.num_array[index2] = self.num_array[index2], self.num_array[index1]
 
     def move_numbers(self, index1, index2):
+        self.prev_next_disabled = True
         if not self.rotating:
             self.num_array[index1], self.num_array[index2] = self.num_array[index2], self.num_array[index1]
         self.rotation(index1, index2)
-        # highlight the cards
 
 
 class Model:
@@ -64,43 +81,123 @@ class Model:
         self.num_cards_handler = NumberCardsHandler(
             self.controller.numbers, self.controller.number_cards)
         self.moves = SelectionSort(self.controller.numbers.copy()).get_moves()
-        self.current_move = None
-        self.current_move_idx = 0
 
+        self.prev_move_stack = []
+        self.next_move_stack = list(reversed(self.moves))
         self.pause = True
-        self.prev_move = None
+        self.manual_mode = False
 
+    def cleanup_rotation(self, finish_rotation = False):
+        if self.num_cards_handler.rotating:
+            if self.get_last_move() is not None:
+                current_move = self.prev_move_stack.pop()
+                self.next_move_stack.append(current_move)
+                self.num_cards_handler.undo_rotation_immediately(
+                        current_move[1], current_move[2], reverse = finish_rotation)
+            self.num_cards_handler.rotating = False
+
+
+    def get_last_move(self):
+        if len(self.prev_move_stack) == 0:
+            return None
+        return self.prev_move_stack[-1]
+
+    def get_next_move(self):
+        if len(self.next_move_stack) == 0:
+            return None
+        return self.next_move_stack[-1]
+
+    def clear_highlight(self, move):
+        if move is None:
+            return
+        if move[0] == NumberCardOperations.COMPARE:
+            self.controller.number_cards[move[1]].unhighlight()
+            self.controller.number_cards[move[2]].unhighlight()
+
+    def highlight(self, move):
+        if move[0] == NumberCardOperations.COMPARE:
+            self.controller.number_cards[move[1]].highlight()
+            self.controller.number_cards[move[2]].highlight()
+
+    def redo_move(self):
+        if len(self.next_move_stack) == 0:
+            return
+        self.cleanup_rotation(finish_rotation = True)
+
+        
+        last_move = self.get_last_move()
+        print("Last Move is " + str(last_move))
+        if last_move is None:
+            return
+        if last_move[0] == NumberCardOperations.COMPARE:
+            self.clear_highlight(last_move)
+        if len(self.next_move_stack) == 0:
+            return
+        current_move = self.next_move_stack.pop()
+        self.prev_move_stack.append(current_move)
+        if current_move[0] == NumberCardOperations.SWAP:
+            self.num_cards_handler.move_numbers(current_move[1], current_move[2])
+            self.num_cards_handler.rotating = True
+        elif current_move[0] == NumberCardOperations.COMPARE:
+            self.highlight(current_move)
+        
+
+    def undo_move(self):
+        if len(self.prev_move_stack) == 0:
+            return
+        current_move = self.get_next_move()
+        if current_move is not None and current_move[0] == NumberCardOperations.COMPARE:
+            self.clear_highlight(current_move)
+
+        current_move = self.prev_move_stack.pop()
+        self.next_move_stack.append(current_move)
+
+        if current_move[0] == NumberCardOperations.SWAP:
+            self.num_cards_handler.move_numbers(current_move[1], current_move[2])
+            self.num_cards_handler.rotating = True
+        elif current_move[0] == NumberCardOperations.COMPARE:
+            self.highlight(current_move)
+        
     def update(self):
 
-        if self.pause:
+        if self.manual_mode and self.get_last_move() is not None:
+            current_move = self.get_last_move()
+            self.num_cards_handler.rotation(
+                current_move[1], current_move[2])
+            return
+
+        if self.pause and not self.num_cards_handler.rotating:
+            self.clear_highlight(self.get_last_move())
             return
 
         self.num_cards_handler.time_since_rotation += 1
         if self.num_cards_handler.time_since_rotation < 10:
             return
-
+        
         if not self.num_cards_handler.rotating:
-            if self.current_move_idx == len(self.moves):
+            if len(self.next_move_stack) == 0:
                 self.pause = True
-                self.current_move_idx = 0
+                for card in self.controller.number_cards:
+                    card.unhighlight()
+              
+                #self.current_move_idx = 0
                 return
-            self.current_move = self.moves[self.current_move_idx]
-            if self.prev_move is not None and self.prev_move[0] == NumberCardOperations.COMPARE:
-                if self.current_move[0] == NumberCardOperations.SWAP:
-                    pygame.time.delay(1000)
-                self.controller.number_cards[self.prev_move[1]].unhighlight()
-                self.controller.number_cards[self.prev_move[2]].unhighlight()
-
-            if self.current_move[0] == NumberCardOperations.SWAP:
+            prev_move = self.get_last_move()
+            current_move = self.next_move_stack.pop()
+            self.prev_move_stack.append(current_move)
+            if prev_move is not None and prev_move[0] == NumberCardOperations.COMPARE:
+                    if current_move[0] == NumberCardOperations.SWAP:
+                        pygame.time.delay(200)
+                    self.clear_highlight(prev_move)
+            if current_move[0] == NumberCardOperations.SWAP:
                 self.num_cards_handler.move_numbers(
-                    self.current_move[1], self.current_move[2])
+                    current_move[1], current_move[2])
                 self.num_cards_handler.rotating = True
-            elif self.current_move[0] == NumberCardOperations.COMPARE:
-                self.controller.number_cards[self.current_move[1]].highlight()
-                self.controller.number_cards[self.current_move[2]].highlight()
-                pygame.time.delay(400)
-            self.prev_move = self.current_move
-            self.current_move_idx += 1
+            elif current_move[0] == NumberCardOperations.COMPARE:
+                self.highlight(current_move)
+                pygame.time.delay(150)
+    
         else:
+            current_move = self.get_last_move()
             self.num_cards_handler.rotation(
-                self.current_move[1], self.current_move[2])
+                current_move[1], current_move[2])

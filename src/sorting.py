@@ -7,7 +7,6 @@ import random
 class NumberCardOperations:
     SWAP: int = 1
     COMPARE: int = 2
-    HIGH_LIGHT: int = 3
 
     @staticmethod
     def create_swap_operation(index1: int, index2: int) -> tuple:
@@ -56,7 +55,6 @@ class SelectionSort(SortingAlgorithm):
                 NumberCardOperations.create_compare_operation(i, min_idx))
             moves.append(
                 NumberCardOperations.create_swap_operation(i, min_idx))
-        print(moves)
         return moves
 
 
@@ -100,8 +98,6 @@ class BubbleSort(SortingAlgorithm):
                     moves.append(
                         NumberCardOperations.create_compare_operation(j, j + 1))
                     moves.append(
-                        NumberCardOperations.create_compare_operation(j, j + 1))
-                    moves.append(
                         NumberCardOperations.create_swap_operation(j, j + 1))
         return moves
 
@@ -119,6 +115,7 @@ class BogoSort(SortingAlgorithm):
             j = i
             while j == i:
                 j = randint(0, len(self.array) - 1)
+            moves.append(NumberCardOperations.create_compare_operation(i, j))
             moves.append(NumberCardOperations.create_swap_operation(i, j))
             current[i], current[j] = current[j], current[i]
 

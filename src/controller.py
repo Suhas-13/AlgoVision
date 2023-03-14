@@ -8,13 +8,14 @@ from view import View
 
 class Controller:
     def __init__(self):
-        self.numbers = [6, 7, 8, 9, 10, 5, 4, 3, 1, 2]
+        self.numbers = [2, 5, 4, 8, 3, 6, 1, 2, 3, 4]
         self.number_cards = []
         self.code_blocks = []
         self.buttons = []
         self.surfaces = []
 
         self.model = Model(self)
+        
         self.view = View(self)
 
     def register_number_cards(self, number_card):
@@ -35,22 +36,35 @@ class Controller:
                 pygame.quit()
                 sys.exit()
 
+
+
     def check_button_click(self):
         for button in self.buttons:
             if button.check_mouseclick():
                 if button.text == "Play":
                     self.model.pause = False
+                    self.model.manual_mode = False
                 elif button.text == "Pause":
                     self.model.pause = True
-                print(f"Button {button.text} clicked")
+                    #self.model.cleanup_rotation()
+                elif button.text == "Prev" and not self.model.num_cards_handler.prev_next_disabled:
+                    self.model.pause = True
+                    self.model.cleanup_rotation()
+                    self.model.manual_mode = True
+                    self.model.undo_move()
+                elif button.text == "Next" and not self.model.num_cards_handler.prev_next_disabled:
+                    self.model.pause = True
+                    self.model.cleanup_rotation(finish_rotation=True)
+                    self.model.manual_mode = True
+                    self.model.redo_move()
 
     def run(self):
         while True:
             self.check_exit()
             self.check_button_click()
-
-            self.view.update()
             self.model.update()
+            self.view.update()
+            
             for surface in self.surfaces:
                 surface.draw(self.view.canvas)
             pygame.display.update()
