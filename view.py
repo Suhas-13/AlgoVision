@@ -1,6 +1,5 @@
 from constants import *
 from controller import *
-from user import *
 import pygame
 import json
 pygame.init()
