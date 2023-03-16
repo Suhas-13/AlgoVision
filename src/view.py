@@ -89,7 +89,7 @@ class NumCard(Button):
         self.highlighted = False
         self.update(self.text)
 
-    def highlight(self, color):
+    def highlight(self, color=GREEN):
         if self.highlighted:
             return
         self.highlighted = True
@@ -156,18 +156,18 @@ class View:
         self.canvas.fill(WHITE)
         pygame.display.set_caption("AlgoVision")
 
-        self.init_number_cards(self.controller.numbers, is_merge_sort=False)
+        self.init_number_cards(self.controller.numbers, is_merge_sort=True)
         self.init_code_blocks()
         self.init_buttons()
 
     def init_number_cards(self, num_arr, is_merge_sort=False):
         if is_merge_sort:
             for idx, num in enumerate(num_arr):
+                print(idx)
                 num_card = NumCard(str(num), MERGE_SORT_X_POS[0][idx], CARD_Y_POS[0], 32)
                 num_card.row = 0
                 self.controller.register_number_cards(num_card)
             return
-
         for idx, num in enumerate(num_arr):
             self.controller.register_number_cards(
                 NumCard(str(num), CARD_X_POS[idx], CARD_Y_POS[2], 32))
