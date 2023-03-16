@@ -1,8 +1,8 @@
-from constants import *
+from .constants import *
 from math import sin, cos, radians, sqrt
-from sorting import SelectionSort, InsertionSort, BubbleSort, NumberCardOperations, MergeSort
+from .sorting import SelectionSort, InsertionSort, BubbleSort, NumberCardOperations, MergeSort, BogoSort
+from .enums import Algorithm
 import pygame
-import time
 
 
 class NumberCardsHandler:
@@ -10,7 +10,6 @@ class NumberCardsHandler:
         self.number_cards = number_cards
         self.rotating = False
         self.prev_next_disabled = False
-
 
         self.time_since_rotation = 0
         self.rows = {0: number_cards, 1: [None] * 10, 2: [None] * 10, 3: [None] * 10, 4: [None] * 10}
@@ -56,64 +55,20 @@ class NumberCardsHandler:
             self.number_cards[index1], self.number_cards[index2] = card2, card1
             self.prev_next_disabled = False
 
-    def undo_rotation_immediately(self, index1, index2, reverse = False):
+    def undo_rotation_immediately(self, index1, index2, reverse=False):
         card1, card2 = self.number_cards[index1], self.number_cards[index2]
         if reverse:
             card1.moveto(CARD_X_POS[index2], CARD_Y_POS)
             card2.moveto(CARD_X_POS[index1], CARD_Y_POS)
             self.number_cards[index1], self.number_cards[index2] = card2, card1
-            self.num_array[index1], self.num_array[index2] = self.num_array[index2], self.num_array[index1]
         else:
             card1.moveto(CARD_X_POS[index1], CARD_Y_POS)
             card2.moveto(CARD_X_POS[index2], CARD_Y_POS)
             self.number_cards[index1], self.number_cards[index2] = card2, card1
-            self.num_array[index1], self.num_array[index2] = self.num_array[index2], self.num_array[index1]
 
     def move_numbers(self, index1, index2):
         self.prev_next_disabled = True
         self.rotation(index1, index2)
-
-    def copy_and_divide(self, index1, index2, controller):
-        current_row = self.number_cards[index1].row
-        for i in range(index1, index2 + 1):
-            self.number_cards[i].row += 1
-            new_card = self.number_cards[i].copy()
-            new_card.row = current_row + 1
-            self.rows[new_card.row][i] = new_card
-            new_card.moveto(MERGE_SORT_X_POS[new_card.row][i], CARD_Y_POS[new_card.row])
-            controller.surfaces.append(new_card)
-
-    def merge(self, index1, index2, controller):
-        current_row = self.number_cards[index1].row
-        num_card1, num_card2 = self.rows[current_row - 1][index1], self.rows[current_row][index2]
-        self.check_merge_complete(index1, num_card1, num_card2, controller)
-        sign = 1 if num_card2.x > num_card1.x else -1
-
-        if self.rotating:
-            num_card2.x -= self.timer * sign
-            num_card2.y += self.timer * self.slope * sign
-            self.timer += 0.01
-
- 
-    def set_slope(self, index1, index2):
-        current_row = self.number_cards[index1].row
-        num_card1, num_card2 = self.rows[current_row - 1][index1], self.rows[current_row][index2]
-        self.slope = - (num_card2.y - num_card1.y) / (num_card2.x - num_card1.x)
-
-    def check_merge_complete(self, index1, num_card1, num_card2, controller):
-        if abs(num_card2.x - num_card1.x) < 1:
-            num_card2.moveto(num_card1.x, num_card1.y)
-            self.rotating = False
-            self.time_since_rotation = 0
-            self.timer = 0
-            num_card1.update(num_card2.text)
-            controller.surfaces.remove(num_card2)
-            self.number_cards[index1].row -= 1
-
-    def clear(self, index1, index2):
-        current_row = self.number_cards[index1].row
-        for i in range(index1, index2 + 1):
-            self.rows[current_row - 1][i].update("")
 
     def copy_and_divide(self, index1, index2, controller):
         current_row = self.number_cards[index1].row
@@ -169,13 +124,13 @@ class Model:
         self.pause = True
         self.manual_mode = False
 
-    def cleanup_rotation(self, finish_rotation = False):
+    def cleanup_rotation(self, finish_rotation=False):
         if self.num_cards_handler.rotating:
             if self.get_last_move() is not None:
                 current_move = self.prev_move_stack.pop()
                 self.next_move_stack.append(current_move)
                 self.num_cards_handler.undo_rotation_immediately(
-                        current_move[1], current_move[2], reverse = finish_rotation)
+                    current_move[1], current_move[2], reverse=finish_rotation)
             self.num_cards_handler.rotating = False
 
     def change_numbers(self):
@@ -185,7 +140,18 @@ class Model:
 
     def start(self):
         self.controller.numbers = [int(num) for num in self.controller.numbers]
-        self.moves = MergeSort(self.controller.numbers.copy()).get_moves()
+
+        if self.controller.current_algorithm is Algorithm.SELECTION_SORT:
+            self.moves = SelectionSort(self.controller.numbers.copy()).get_moves()
+        elif self.controller.current_algorithm is Algorithm.INSERTION_SORT:
+            self.moves = InsertionSort(self.controller.numbers.copy()).get_moves()
+        elif self.controller.current_algorithm is Algorithm.MERGE_SORT:
+            self.moves = MergeSort(self.controller.numbers.copy()).get_moves()
+        elif self.controller.current_algorithm is Algorithm.BUBBLE_SORT:
+            self.moves = BubbleSort(self.controller.numbers.copy()).get_moves()
+        elif self.controller.current_algorithm is Algorithm.BOGO_SORT:
+            self.moves = BogoSort(self.controller.numbers.copy()).get_moves()
+
         self.next_move_stack = list(reversed(self.moves))
         self.pause = False
         self.controller.allow_to_change = False
@@ -215,11 +181,9 @@ class Model:
     def redo_move(self):
         if len(self.next_move_stack) == 0:
             return
-        self.cleanup_rotation(finish_rotation = True)
+        self.cleanup_rotation(finish_rotation=True)
 
-        
         last_move = self.get_last_move()
-        print("Last Move is " + str(last_move))
         if last_move is None:
             return
         if last_move[0] == NumberCardOperations.COMPARE:
@@ -233,7 +197,6 @@ class Model:
             self.num_cards_handler.rotating = True
         elif current_move[0] == NumberCardOperations.COMPARE:
             self.highlight(current_move)
-        
 
     def undo_move(self):
         if len(self.prev_move_stack) == 0:
@@ -250,11 +213,10 @@ class Model:
             self.num_cards_handler.rotating = True
         elif current_move[0] == NumberCardOperations.COMPARE:
             self.highlight(current_move)
-        
+
     def update(self):
         if self.controller.allow_to_change:
             self.change_numbers()
-
 
         if self.manual_mode and self.get_last_move() is not None:
             current_move = self.get_last_move()
@@ -269,7 +231,7 @@ class Model:
         self.num_cards_handler.time_since_rotation += 1
         if self.num_cards_handler.time_since_rotation < 10:
             return
-        
+
         if not self.num_cards_handler.rotating:
             if len(self.next_move_stack) == 0:
                 self.pause = True
@@ -288,7 +250,6 @@ class Model:
                     current_move[1], current_move[2])
                 self.num_cards_handler.rotating = True
             elif current_move[0] == NumberCardOperations.COMPARE:
-                print("TRYING TO COMPARE")
                 self.highlight(current_move)
                 pygame.time.delay(400)
 
@@ -311,4 +272,3 @@ class Model:
                     current_move[1], current_move[2])
             elif current_move[0] == NumberCardOperations.MERGE:
                 self.num_cards_handler.merge(current_move[1], current_move[2], self.controller)
-

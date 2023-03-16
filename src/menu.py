@@ -4,10 +4,13 @@ import json
 import random
 import string
 
+from src.animation.controller import Controller as AnimationController
+from src.animation.enums import Algorithm
+
 pygame.init()
 
-width = 800
-height = 600
+width = 1200
+height = 700
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Main Menu")
 
@@ -189,12 +192,12 @@ def beginner():
 
         sort1_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height), 2)
         font = pygame.font.SysFont('Courier', 30)
-        sort1_text = font.render("B Sort 1", True, WHITE)
+        sort1_text = font.render("Bubble Sort", True, WHITE)
         sort1_rect = sort1_text.get_rect(center=sort1_button.center)
         screen.blit(sort1_text, sort1_rect)
 
         sort2_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 1 * (button_height + button_spacing), button_width, button_height), 2)
-        sort2_text = font.render("B Sort 2", True, WHITE)
+        sort2_text = font.render("Selection Sort", True, WHITE)
         sort2_rect = sort2_text.get_rect(center=sort2_button.center)
         screen.blit(sort2_text, sort2_rect)
 
@@ -237,7 +240,7 @@ def intermediate():
 
         sort1_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height), 2)
         font = pygame.font.SysFont('Courier', 30)
-        sort1_text = font.render("I Sort 1", True, WHITE)
+        sort1_text = font.render("Insertion Sort", True, WHITE)
         sort1_rect = sort1_text.get_rect(center=sort1_button.center)
         screen.blit(sort1_text, sort1_rect)
 
@@ -285,12 +288,12 @@ def advanced():
 
         sort1_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height), 2)
         font = pygame.font.SysFont('Courier', 30)
-        sort1_text = font.render("A Sort 1", True, WHITE)
+        sort1_text = font.render("Merge Sort", True, WHITE)
         sort1_rect = sort1_text.get_rect(center=sort1_button.center)
         screen.blit(sort1_text, sort1_rect)
 
         sort2_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 1 * (button_height + button_spacing), button_width, button_height), 2)
-        sort2_text = font.render("A Sort 2", True, WHITE)
+        sort2_text = font.render("Bogo Sort", True, WHITE)
         sort2_rect = sort2_text.get_rect(center=sort2_button.center)
         screen.blit(sort2_text, sort2_rect)
 
@@ -461,11 +464,15 @@ def signup():
 
 def bsort1_page():
     # Add code for beginner Sort 1 page here
-    pass
+    bubble_sort = AnimationController()
+    bubble_sort.current_algorithm = Algorithm.BUBBLE_SORT
+    bubble_sort.run()
 
 def bsort2_page():
     # Add code for beginner Sort 2 page here
-    pass
+    selection_sort = AnimationController()
+    selection_sort.current_algorithm = Algorithm.SELECTION_SORT
+    selection_sort.run()
 
 def bsort3_page():
     # Add code for beginner Sort 3 page here
@@ -473,7 +480,9 @@ def bsort3_page():
 
 def isort1_page():
     # Add code for intermediate Sort 1 page here
-    pass
+    insertion_sort = AnimationController()
+    insertion_sort.current_algorithm = Algorithm.INSERTION_SORT
+    insertion_sort.run()
 
 def isort2_page():
     # Add code for intermediate Sort 2 page here
@@ -485,11 +494,15 @@ def isort3_page():
 
 def asort1_page():
     # Add code for advanced Sort 1 page here
-    pass
+    merge_sort = AnimationController()
+    merge_sort.current_algorithm = Algorithm.MERGE_SORT
+    merge_sort.run()
 
 def asort2_page():
     # Add code for advanced Sort 2 page here
-    pass
+    bogo_sort = AnimationController()
+    bogo_sort.current_algorithm = Algorithm.BOGO_SORT
+    bogo_sort.run()
 
 def asort3_page():
     # Add code for advanced Sort 3 page here
@@ -498,5 +511,8 @@ def asort3_page():
 def mcq():
     pass
 
-main_menu()
+
+if __name__ == "__main__":
+    main_menu()
+
 

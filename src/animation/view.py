@@ -1,6 +1,7 @@
 import pygame
 
-from constants import *
+from .constants import *
+from .enums import Algorithm
 
 
 class Text:
@@ -56,6 +57,7 @@ class Button(Text):
         pos = pygame.mouse.get_pos()  # get mouse position
 
         if self.rect.collidepoint(pos):
+            print(pygame.mouse.get_pressed()[0])
             if pygame.mouse.get_pressed()[0] is True and self.clicked is False:
                 self.clicked = True  # set to prevent double click
                 return True
@@ -120,13 +122,13 @@ class NumCard(Button):
         elif typable:
             self.typable = True
             self.highlight(BLACK)
-            print("Typable")
 
     def check_typable(self):
         self.check_mouseclick()
         if self.typable and self.clicked:
             self.set_typable(False)
         elif not self.typable and self.clicked:
+            self.update("")
             self.set_typable(True)
 
     def copy(self):
@@ -156,14 +158,13 @@ class View:
         self.canvas.fill(WHITE)
         pygame.display.set_caption("AlgoVision")
 
-        self.init_number_cards(self.controller.numbers, is_merge_sort=True)
+        self.init_number_cards(self.controller.numbers)
         self.init_code_blocks()
         self.init_buttons()
 
-    def init_number_cards(self, num_arr, is_merge_sort=False):
-        if is_merge_sort:
+    def init_number_cards(self, num_arr):
+        if self.controller.current_algorithm is Algorithm.MERGE_SORT:
             for idx, num in enumerate(num_arr):
-                print(idx)
                 num_card = NumCard(str(num), MERGE_SORT_X_POS[0][idx], CARD_Y_POS[0], 32)
                 num_card.row = 0
                 self.controller.register_number_cards(num_card)

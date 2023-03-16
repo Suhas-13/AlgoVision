@@ -1,5 +1,3 @@
-from controller import Controller
+from src import menu
 
-game = Controller()
-game.run()
-
+menu.main_menu()

@@ -1,9 +1,9 @@
 import pygame
 import sys
-import time
-
-from model import Model
-from view import View
+from .model import Model
+from .view import View
+from .enums import Algorithm
+import src.menu as menu
 
 
 class Controller:
@@ -13,13 +13,13 @@ class Controller:
         self.code_blocks = []
         self.buttons = []
         self.surfaces = []
+        self.current_algorithm = Algorithm.SELECTION_SORT
 
         self.model = Model(self)
-        
         self.view = View(self)
+
         self.allow_to_change = True
         self.started = False
-
 
     def register_number_cards(self, number_card):
         self.number_cards.append(number_card)
@@ -45,7 +45,7 @@ class Controller:
                         self.model.pause = False
                 elif button.text == "Pause":
                     self.model.pause = True
-                    #self.model.cleanup_rotation()
+                    # self.model.cleanup_rotation()
                 elif button.text == "Prev" and not self.model.num_cards_handler.prev_next_disabled:
                     self.model.pause = True
                     self.model.cleanup_rotation()
@@ -71,8 +71,7 @@ class Controller:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                return True
 
             if self.allow_to_change:
                 # set all number cards to not typable when mouse is clicked anywhere
@@ -84,7 +83,9 @@ class Controller:
 
     def run(self):
         while True:
-            self.check_events()
+            exit = self.check_events()
+            if exit:
+                break
             self.view.update()
             self.model.update()
             for surface in self.surfaces:
