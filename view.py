@@ -2,6 +2,7 @@ from constants import *
 from controller import *
 import pygame
 import json
+import random
 pygame.init()
 
 class Text:
@@ -91,6 +92,10 @@ class PointsBox(Text):
         Text.__init__(self, text, x, y, 30, draw_background, rect_color, rect_size)
         self.text = text
 
+class EndScreen(Text):
+    def __init__(self, text, height = 500, width = 500, x = 400, y = 0, rect_color=None, size=30, draw_background=False, rect_size=(500,500)):
+        Text.__init__(self, text, x, y, 30, draw_background, rect_color, rect_size)
+
 class View:
     def __init__(self,controller):
         self.controller = controller
@@ -102,32 +107,64 @@ class View:
         self.init_question()
         self.init_points()
 
+    def endScreen(self):
+        points=self.controller.points
+        text = "You got "+points+"!"
+        EndScreen(text)
+
     def openFile(self):
         file = open("mcq.json")
         database = json.load(file)
         file.close()
         return database
+    
+    def correctAnsPos(self):
+        x = random.randint(1,4)
+        return x
+
+    def incorrectAnsPos(self, corrPos):
+        x = []
+        if corrPos == 1:
+            x = [True,False,False,False]
+        elif corrPos == 2:
+            x = [False,True,False,False]
+        elif corrPos == 3:
+            x = [False,False,True,False]
+        elif corrPos == 4:
+            x = [False,False,False,True]
+        return x
 
     def choose_question(self):
         data = self.openFile()
         q = data[self.controller.mode][self.controller.questionNumber - 1]["question"]
         return q
     
-    def choose_answer(self, n):
+    def determine_answers(self, corrArr):
         data = self.openFile()
-        if n == 1:
-            a = data[self.controller.mode][self.controller.questionNumber - 1]["right"]
-            correct = True
-        if n == 2:
-            a = data[self.controller.mode][self.controller.questionNumber - 1]["wrong1"]
-            correct = False
-        if n == 3:
-            a = data[self.controller.mode][self.controller.questionNumber - 1]["wrong2"]
-            correct = False
-        if n == 4:
-            a = data[self.controller.mode][self.controller.questionNumber - 1]["wrong3"]
-            correct = False
-        return a, correct
+        text=[0,0,0,0]
+        print(corrArr)
+        if corrArr[0]:
+            text[0] = data[self.controller.mode][self.controller.questionNumber - 1]["right"]
+            text[1] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong3"]
+            text[2] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong1"]
+            text[3] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong2"]
+        elif corrArr[1]:
+            text[0] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong2"]
+            text[1] = data[self.controller.mode][self.controller.questionNumber - 1]["right"]
+            text[2] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong1"]
+            text[3] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong3"]
+        elif corrArr[2]:
+            text[0] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong1"]
+            text[1] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong2"]
+            text[2] = data[self.controller.mode][self.controller.questionNumber - 1]["right"]
+            text[3] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong3"]
+        elif corrArr[3]:
+            text[0] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong1"]
+            text[1] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong2"]
+            text[2] = data[self.controller.mode][self.controller.questionNumber - 1]["wrong3"]
+            text[3] = data[self.controller.mode][self.controller.questionNumber - 1]["right"]
+
+        return text
     
 
     def init_question(self):
@@ -136,17 +173,20 @@ class View:
 
     def init_answers(self):
         yCounter=0
+        corrPos = self.correctAnsPos()
+        isCorrect = self.incorrectAnsPos(corrPos)
+        textArr = self.determine_answers(isCorrect)
         for i in range(4):
-            text, correct = self.choose_answer(i+1)
             self.controller.register_answer_boxes(
-                AnswerButton(text, ANSWER_X, ANSWER_Y+yCounter, 25, correct)
+                AnswerButton(textArr[i-1], ANSWER_X, ANSWER_Y+yCounter, 25, isCorrect[i-1])
             )
             yCounter+=100
 
     def init_points(self):
         print("in pts")
         points = self.controller.points
-        PointsBox("Point: ")
+        text = "Points: "+points
+        PointsBox(text)
 
     def update(self):
         self.canvas.fill(WHITE)
