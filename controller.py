@@ -4,7 +4,6 @@ import time
 
 from model import Model
 from view import *
-from user import *
 
 class Controller:
     def __init__(self, questionNumber=1, mode = "bubble", points = 0):
