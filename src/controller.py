@@ -15,6 +15,7 @@ class Controller:
         self.surfaces = []
 
         self.model = Model(self)
+        
         self.view = View(self)
         self.allow_to_change = True
         self.started = False
@@ -46,7 +47,17 @@ class Controller:
 
                 elif button.text == "Pause":
                     self.model.pause = True
-                print(f"Button {button.text} clicked")
+                    #self.model.cleanup_rotation()
+                elif button.text == "Prev" and not self.model.num_cards_handler.prev_next_disabled:
+                    self.model.pause = True
+                    self.model.cleanup_rotation()
+                    self.model.manual_mode = True
+                    self.model.undo_move()
+                elif button.text == "Next" and not self.model.num_cards_handler.prev_next_disabled:
+                    self.model.pause = True
+                    self.model.cleanup_rotation(finish_rotation=True)
+                    self.model.manual_mode = True
+                    self.model.redo_move()
 
     def check_change_numbers(self, event):
         for number_card in self.number_cards:

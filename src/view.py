@@ -79,6 +79,12 @@ class NumCard(Button):
         self.x = x
         self.y = y
 
+    def toggle_highlight(self):
+        if self.highlighted:
+            self.unhighlight()
+        else:
+            self.highlight()
+            
     def unhighlight(self):
         self.highlighted = False
         self.update(self.text)
@@ -176,7 +182,7 @@ class View:
         self.controller.register_button(
             Button("Pause", 125, 40, 24, True, LIGHT_GREY, (75, 40)))
         self.controller.register_button(
-            Button("Last", 225, 40, 24, True, LIGHT_GREY, (75, 40)))
+            Button("Prev", 225, 40, 24, True, LIGHT_GREY, (75, 40)))
         self.controller.register_button(
             Button("Next", 325, 40, 24, True, LIGHT_GREY, (75, 40)))
 
