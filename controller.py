@@ -4,6 +4,7 @@ import time
 
 from model import Model
 from view import *
+from user import *
 
 class Controller:
     def __init__(self, questionNumber=1, mode = "bubble", points = 0):
@@ -28,17 +29,21 @@ class Controller:
     def addPoint(self):
         self.points += 1
 
+    def endScreen(self):
+        pass
+
     def check_answerBox_click(self):
         for answer in self.answers:
             if answer.check_mouseClick():
                 if answer.correct:
                     self.addPoint()
                     self.questionNumber += 1
-                    time.sleep(3)
+                    if self.questionNumber>10:
+                        self.endScreen()
                 if not answer.correct:
                     self.questionNumber += 1
-                    time.sleep(3)
-                    pass
+                    if self.questionNumber>10:
+                        self.endScreen()
 
     def check_exit(self):
         for event in pygame.event.get():
