@@ -1,0 +1,251 @@
+{
+    "bubble": [
+        {
+            "id": 1,
+            "question": "Q1. What is the average case time complexity for a bubble sort?",
+            "right": "O(n^2)",
+            "wrong1": "O(n)",
+            "wrong2": "O(nlogn)",
+            "wrong3": "O(1)"
+        },
+        {
+            "id": 2,
+            "question": "Q2. What is the best case time complexity for a bubble sort?",
+            "right": "O(n)",
+            "wrong1": "O(n^2)",
+            "wrong2": "O(nlogn)",
+            "wrong3": "O(1)"
+        },
+        {
+            "id": 3,
+            "question": "Q3. What is the worst case time complexity for a bubble sort?",
+            "right": "O(n^2)",
+            "wrong1": "O(n)",
+            "wrong2": "O(nlogn)",
+            "wrong3": "O(1)"
+        },
+        {
+            "id": 4,
+            "question": "Q4. What is the space complexity for a bubble sort?",
+            "right": "O(1)",
+            "wrong1": "O(n)",
+            "wrong2": "O(logn)",
+            "wrong3": "O(nlogn)"
+        },
+        {
+            "id": 5,
+            "question": "Q5. How many passes are needed to sort a list of 8 elements?",
+            "right": "7",
+            "wrong1": "9",
+            "wrong2": "8",
+            "wrong3": "0"
+        },
+        {
+            "id": 6,
+            "question": "Q6. What would the third pass of the following array be: 20,16,12,8,4,1?",
+            "right": "8,4,1,12,16,20",
+            "wrong1": "4,1,8,12,16,20",
+            "wrong2": "1,4,8,12,16,20",
+            "wrong3": "16,12,8,20,4,1"
+        },
+        {
+            "id": 7,
+            "question": "Q7. How many swaps are needed to sort the following list: 8,22,7,9,31,5,13?",
+            "right": "10",
+            "wrong1": "11",
+            "wrong2": "12",
+            "wrong3": "15"
+        },
+        {
+            "id": 8,
+            "question": "Q8. What is one way to optimise a bubble sort?",
+            "right": "End when no swaps have been made in a pass",
+            "wrong1": "Divide the list into sections",
+            "wrong2": "You cannot optimise a bubble sort",
+            "wrong3": "Skip every other element if the list is partially sorted"
+        },
+        {
+            "id": 9,
+            "question": "Q9. What is the number of swaps needed to sort the following list: 8,22,7,9,31,5,13?",
+            "right": "10",
+            "wrong1": "11",
+            "wrong2": "12",
+            "wrong3": "15"
+        },
+        {
+            "id": 10,
+            "question": "Q10. How many passes will occur in an optimised bubble sort with the following list: 1,2,4,3",
+            "right": "10",
+            "wrong1": "11",
+            "wrong2": "12",
+            "wrong3": "15"
+        }
+
+    ],
+
+    "quick": [
+        {
+            "id": 1,
+            "question": "Q1. What is the average case time complexity for a quick sort?",
+            "right": "O(nlogn)",
+            "wrong1": "O(n)",
+            "wrong2": "O(n^2)",
+            "wrong3": "O(1)"
+        },
+        {
+            "id": 2,
+            "question": "Q2. What is the best case time complexity for a quick sort?",
+            "right": "O(nlogn)",
+            "wrong1": "O(n^2)",
+            "wrong2": "O(n)",
+            "wrong3": "O(1)"
+        },
+        {
+            "id": 3,
+            "question": "Q3. What is the worst case time complexity for a quick sort?",
+            "right": "O(n^2)",
+            "wrong1": "O(n)",
+            "wrong2": "O(nlogn)",
+            "wrong3": "O(1)"
+        },
+        {
+            "id": 4,
+            "question": "Q4. What is the space complexity for a quick sort?",
+            "right": "O(logn)",
+            "wrong1": "O(n)",
+            "wrong2": "O(1)",
+            "wrong3": "O(nlogn)"
+        },
+        {
+            "id": 5,
+            "question": "Q5. Which element is the most effective choice as a pivot?",
+            "right": "Middle",
+            "wrong1": "Last",
+            "wrong2": "It makes no difference",
+            "wrong3": "First"
+        },
+        {
+            "id": 6,
+            "question": "Q6. How many sub-arrays are used with a quick sort?",
+            "right": "2",
+            "wrong1": "4",
+            "wrong2": "N, each element has its own array",
+            "wrong3": "None, only the main array is used"
+        },
+        {
+            "id": 7,
+            "question": "Q7. What is the sequence after the first phase: 7,11,14,6,9,3,12; pivot=7",
+            "right": "6,3,4,7,9,14,11,12",
+            "wrong1": "7,6,14,11,9,4,3,12",
+            "wrong2": "6,4,3,7,11,9,14,12",
+            "wrong3": "7,6,4,3,9,14,11,12"
+        },
+        {
+            "id": 8,
+            "question": "Q8. In which case is the best case reached with a quick sort?",
+            "right": "When the pivot is always the median",
+            "wrong1": "Sorted in ascending order",
+            "wrong2": "Sorted in descending order",
+            "wrong3": "Completely random list"
+        },
+        {
+            "id": 9,
+            "question": "Q9. When does the worst case occur with a quick sort?",
+            "right": "List is already sorted",
+            "wrong1": "Completely randomly ordered list",
+            "wrong2": "When the pivot is the average of all the values",
+            "wrong3": "List is mostly sorted"
+        },
+        {
+            "id": 10,
+            "question": "Q10. Which sort is the quick sort an optimised version of?",
+            "right": "Binary tree sort",
+            "wrong1": "Bubble sort",
+            "wrong2": "Insertion sort",
+            "wrong3": "Merge sort"
+        }
+    ],
+    "merge": [
+        {
+            "id": 1,
+            "question": "Q1. What is the average case time complexity for a merge sort?",
+            "right": "O(nlogn)",
+            "wrong1": "O(n)",
+            "wrong2": "O(n^2)",
+            "wrong3": "O(1)"
+        },
+        {
+            "id": 2,
+            "question": "Q2. What is the best case time complexity for a merge sort?",
+            "right": "O(nlogn)",
+            "wrong1": "O(n^2)",
+            "wrong2": "O(n)",
+            "wrong3": "O(1)"
+        },
+        {
+            "id": 3,
+            "question": "Q3. What is the worst case time complexity for a merge sort?",
+            "right": "O(nlogn)",
+            "wrong1": "O(n)",
+            "wrong2": "O(n^2)",
+            "wrong3": "O(1)"
+        },
+        {
+            "id": 4,
+            "question": "Q4. What is the space complexity for a merge sort?",
+            "right": "O(n)",
+            "wrong1": "O(1)",
+            "wrong2": "O(logn)",
+            "wrong3": "O(nlogn)"
+        },
+        {
+            "id": 5,
+            "question": "Q5. How many sublists are used in a merge sort?",
+            "right": "N, however many elements there are",
+            "wrong1": "2, the list is split in half",
+            "wrong2": "3, the list is split into thirds",
+            "wrong3": "None, only the main list is used"
+        },
+        {
+            "id": 6,
+            "question": "Q6. What would the third pass of the following array be: 20,16,12,8,4,1?",
+            "right": "8,4,1,12,16,20",
+            "wrong1": "4,1,8,12,16,20",
+            "wrong2": "1,4,8,12,16,20",
+            "wrong3": "16,12,8,20,4,1"
+        },
+        {
+            "id": 7,
+            "question": "Q7. Which algorithm is less dependent on initial ordering than merge sort?",
+            "right": "None, merge sort depents the least on the initial list order",
+            "wrong1": "Bubble sort",
+            "wrong2": "Insertion sort",
+            "wrong3": "Quick sort"
+        },
+        {
+            "id": 8,
+            "question": "Q8. What is one way to optimise a bubble sort?",
+            "right": "End when no swaps have been made in a pass",
+            "wrong1": "Divide the list into sections",
+            "wrong2": "You cannot optimise a bubble sort",
+            "wrong3": "Skip every other element if the list is partially sorted"
+        },
+        {
+            "id": 9,
+            "question": "Q9. Which technique does merge sort use?",
+            "right": "Divide and conquer",
+            "wrong1": "Brute force",
+            "wrong2": "Backtracking",
+            "wrong3": "Dynamic programming"
+        },
+        {
+            "id": 10,
+            "question": "Q10. How many passes will occur in an optimised bubble sort with the following list: 1,2,4,3",
+            "right": "10",
+            "wrong1": "11",
+            "wrong2": "12",
+            "wrong3": "15"
+        }
+
+    ]
+}
