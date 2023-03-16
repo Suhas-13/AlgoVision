@@ -94,6 +94,7 @@ class NumberCardsHandler:
             num_card2.y += self.timer * self.slope * sign
             self.timer += 0.01
 
+ 
     def set_slope(self, index1, index2):
         current_row = self.number_cards[index1].row
         num_card1, num_card2 = self.rows[current_row - 1][index1], self.rows[current_row][index2]
@@ -164,7 +165,7 @@ class Model:
         self.current_move = None
 
         self.prev_move_stack = []
-        self.next_move_stack = list(reversed(self.moves))
+        self.next_move_stack = []
         self.pause = True
         self.manual_mode = False
 
@@ -177,6 +178,17 @@ class Model:
                         current_move[1], current_move[2], reverse = finish_rotation)
             self.num_cards_handler.rotating = False
 
+    def change_numbers(self):
+        for idx, num_card in enumerate(self.controller.number_cards):
+            if num_card.text != str(self.controller.numbers[idx]):
+                self.controller.numbers[idx] = num_card.text
+
+    def start(self):
+        self.controller.numbers = [int(num) for num in self.controller.numbers]
+        self.moves = MergeSort(self.controller.numbers.copy()).get_moves()
+        self.next_move_stack = list(reversed(self.moves))
+        self.pause = False
+        self.controller.allow_to_change = False
 
     def get_last_move(self):
         if len(self.prev_move_stack) == 0:
@@ -243,6 +255,7 @@ class Model:
         if self.controller.allow_to_change:
             self.change_numbers()
 
+
         if self.manual_mode and self.get_last_move() is not None:
             current_move = self.get_last_move()
             self.num_cards_handler.rotation(
@@ -262,38 +275,35 @@ class Model:
                 self.pause = True
                 for card in self.controller.number_cards:
                     card.unhighlight()
-              
-                #self.current_move_idx = 0
                 return
             prev_move = self.get_last_move()
             current_move = self.next_move_stack.pop()
             self.prev_move_stack.append(current_move)
             if prev_move is not None and prev_move[0] == NumberCardOperations.COMPARE:
-                    if current_move[0] == NumberCardOperations.SWAP:
-                        pygame.time.delay(200)
-                    self.clear_highlight(prev_move)
+                if current_move[0] == NumberCardOperations.SWAP:
+                    pygame.time.delay(200)
+                self.clear_highlight(prev_move)
             if current_move[0] == NumberCardOperations.SWAP:
                 self.num_cards_handler.move_numbers(
                     current_move[1], current_move[2])
                 self.num_cards_handler.rotating = True
             elif current_move[0] == NumberCardOperations.COMPARE:
-                self.highlight(GREENcurrent_moveGREEN)
+                print("TRYING TO COMPARE")
+                self.highlight(current_move)
                 pygame.time.delay(400)
 
-            elif self.current_move[0] == NumberCardOperations.DIVIDE:
-                self.num_cards_handler.copy_and_divide(self.current_move[1], self.current_move[2], self.controller)
+            elif current_move[0] == NumberCardOperations.DIVIDE:
+                self.num_cards_handler.copy_and_divide(current_move[1], current_move[2], self.controller)
                 pygame.time.delay(400)
 
-            elif self.current_move[0] == NumberCardOperations.MERGE:
+            elif current_move[0] == NumberCardOperations.MERGE:
                 self.num_cards_handler.rotating = True
-                self.num_cards_handler.set_slope(self.current_move[1], self.current_move[2])
-                self.num_cards_handler.merge(self.current_move[1], self.current_move[2], self.controller)
+                self.num_cards_handler.set_slope(current_move[1], current_move[2])
+                self.num_cards_handler.merge(current_move[1], current_move[2], self.controller)
 
-            elif self.current_move[0] == NumberCardOperations.CLEAR:
-                self.num_cards_handler.clear(self.current_move[1], self.current_move[2])
+            elif current_move[0] == NumberCardOperations.CLEAR:
+                self.num_cards_handler.clear(current_move[1], current_move[2])
                 pygame.time.delay(150)
-
-    
         else:
             current_move = self.get_last_move()
             if current_move[0] == NumberCardOperations.SWAP:

@@ -20,7 +20,6 @@ class Controller:
         self.allow_to_change = True
         self.started = False
 
-        self.current_algo = "selection"
 
     def register_number_cards(self, number_card):
         self.number_cards.append(number_card)
@@ -39,12 +38,11 @@ class Controller:
         for button in self.buttons:
             if button.check_mouseclick():
                 if button.text == "Play":
-                    self.model.pause = False
-
                     if not self.started:
                         self.started = True
                         self.model.start()
-
+                    elif self.model.pause:
+                        self.model.pause = False
                 elif button.text == "Pause":
                     self.model.pause = True
                     #self.model.cleanup_rotation()
@@ -87,10 +85,8 @@ class Controller:
     def run(self):
         while True:
             self.check_events()
-
             self.view.update()
             self.model.update()
-
             for surface in self.surfaces:
                 surface.draw(self.view.canvas)
             pygame.display.update()
