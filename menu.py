@@ -1,5 +1,8 @@
 import sys
 import pygame
+import json
+import random
+import string
 
 pygame.init()
 
@@ -213,7 +216,6 @@ def intermediate():
     y_offset = (height - total_height) / 2 + 30
 
     while True:
-        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -300,7 +302,162 @@ def advanced():
         pygame.display.update()
     
 def teacher_mode():
-    pass
+    button_width = 300
+    button_height = 80
+    button_spacing = 40
+    border_width = 2
+
+    total_height = button_height * 3 + button_spacing * 2
+
+    y_offset = (height - total_height) / 2 + button_height + button_spacing - 30
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                pos = pygame.mouse.get_pos()
+                if login_button.collidepoint(pos):
+                    login()
+                elif signup_button.collidepoint(pos):
+                    signup()
+
+        screen.fill(BLUE)
+
+        font = pygame.font.SysFont('Courier', 40)
+        title_text = font.render("Teacher Mode", True, WHITE)
+        title_rect = title_text.get_rect(center=(width/2, height/4))
+        screen.blit(title_text, title_rect)
+
+        pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2 - border_width, y_offset + 0 * (button_height + button_spacing) - border_width, button_width + 2 * border_width, button_height + 2 * border_width), border_width)
+        login_button = pygame.draw.ellipse(screen, BLUE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height))
+        font = pygame.font.SysFont('Courier', 30)
+        login_text = font.render("Login", True, WHITE)
+        login_rect = login_text.get_rect(center=login_button.center)
+        screen.blit(login_text, login_rect)
+
+        pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2 - border_width, y_offset + 1 * (button_height + button_spacing) - border_width, button_width + 2 * border_width, button_height + 2 * border_width), border_width)
+        signup_button = pygame.draw.ellipse(screen, BLUE, ((width - button_width) / 2, y_offset + 1 * (button_height + button_spacing), button_width, button_height))
+        signup_text = font.render("Signup", True, WHITE)
+        signup_rect = signup_text.get_rect(center=signup_button.center)
+        screen.blit(signup_text, signup_rect)
+
+        pygame.display.update()
+
+def login():
+    font = pygame.font.SysFont('Courier', 30)
+
+    with open('teachers.json', 'r') as file:
+        data = json.load(file)
+
+    name = ''
+    code = ''
+    name_input = False
+    code_input = False
+
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    if not name_input:
+                        name_input = True
+                        print(f"Name: {name}")
+                    elif not code_input:
+                        code_input = True
+                        print(f"Code: {code}")
+                elif event.key == pygame.K_BACKSPACE:
+                    if not code_input and len(name) > 0:
+                        name = name[:-1]
+                    elif code_input and len(code) > 0:
+                        code = code[:-1]
+                else:
+                    if not name_input:
+                        name += event.unicode
+                    elif not code_input:
+                        code += event.unicode
+
+        screen.fill(BLUE)
+
+        if not name_input:
+            text = font.render('Enter your name: ' + name, True, WHITE)
+        elif not code_input:
+            text = font.render('Enter your code: ' + code, True, WHITE)
+        else:
+            data_exists = False
+            for item in data['teachers']:
+                if item['name'] == name and item['classroom_code'] == code:
+                    data_exists = True
+                    break
+            if data_exists:
+                text = font.render('Logged in', True, WHITE)
+                running = False
+            else:
+                text = font.render('Incorrect name or code.', True, WHITE) #needs to allow user to login again
+
+
+        
+        text_rect = text.get_rect(center=(width/2, height/2))
+        screen.blit(text, text_rect)
+        pygame.display.update()
+        
+
+def signup():
+    font = pygame.font.SysFont('Courier', 30)
+
+    with open('teachers.json', 'r') as file:
+        data = json.load(file)
+
+    name = ''
+    code = ''
+    name_input = False
+    code_input = False
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    if not name_input:
+                        name_input = True
+                        print(f"Name: {name}")
+                else:
+                    if not name_input:
+                        name += event.unicode
+
+        screen.fill(BLUE)
+
+        if not name_input:
+            text = font.render('Enter your name: ' + name, True, WHITE)
+        else:
+            data_exists = True
+            while data_exists == True:
+                code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+                print(code)
+                for item in data['teachers']:
+                    if item['classroom_code'] == code:
+                        data_exists = True
+                    else:
+                        data_exists = False
+                        text = font.render('Your classroom code is ' + code, True, WHITE) #needs to show up
+                        running = False
+
+                        
+            data['teachers'].append({'name': name, 'classroom_code': code})
+            with open('teachers.json', 'w') as file:
+                json.dump(data, file)
+
+        
+        
+        text_rect = text.get_rect(center=(width/2, height/2))
+        screen.blit(text, text_rect)
+        pygame.display.update()
 
 def bsort1_page():
     # Add code for beginner Sort 1 page here
@@ -342,3 +499,4 @@ def mcq():
     pass
 
 main_menu()
+
