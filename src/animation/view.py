@@ -57,7 +57,6 @@ class Button(Text):
         pos = pygame.mouse.get_pos()  # get mouse position
 
         if self.rect.collidepoint(pos):
-            print(pygame.mouse.get_pressed()[0])
             if pygame.mouse.get_pressed()[0] is True and self.clicked is False:
                 self.clicked = True  # set to prevent double click
                 return True
@@ -136,18 +135,14 @@ class NumCard(Button):
 
 
 class CodeBlock:
-    def __init__(self, x, y, width, height, rect_color):
+    def __init__(self, x, y, image, rect_color):
         self.x = x
         self.y = y
-        self.width = width
-        self.height = height
+        self.image = image
         self.rect_color = rect_color
 
-        self.background_surface = pygame.Surface((self.width, self.height))
-        self.background_surface.fill(self.rect_color)
-
     def draw(self, screen):
-        screen.blit(self.background_surface, (self.x, self.y))
+        screen.blit(self.image, (self.x, self.y))
 
 
 class View:
@@ -161,6 +156,7 @@ class View:
         self.init_number_cards(self.controller.numbers)
         self.init_code_blocks()
         self.init_buttons()
+        self.init_title()
 
     def init_number_cards(self, num_arr):
         if self.controller.current_algorithm is Algorithm.MERGE_SORT:
@@ -169,13 +165,25 @@ class View:
                 num_card.row = 0
                 self.controller.register_number_cards(num_card)
             return
-        for idx, num in enumerate(num_arr):
-            self.controller.register_number_cards(
-                NumCard(str(num), CARD_X_POS[idx], CARD_Y_POS[2], 32))
+        else:
+            for idx, num in enumerate(num_arr):
+                self.controller.register_number_cards(
+                    NumCard(str(num), CARD_X_POS[idx], CARD_Y_POS[2], 32))
 
     def init_code_blocks(self):
+        if self.controller.current_algorithm is Algorithm.INSERTION_SORT:
+            image = pygame.image.load("./images/insertion.png")
+        elif self.controller.current_algorithm is Algorithm.SELECTION_SORT:
+            image = pygame.image.load("./images/selection.png")
+        elif self.controller.current_algorithm is Algorithm.BUBBLE_SORT:
+            image = pygame.image.load("./images/bubble.png")
+        elif self.controller.current_algorithm is Algorithm.MERGE_SORT:
+            image = pygame.image.load("./images/merge.png")
+        elif self.controller.current_algorithm is Algorithm.BOGO_SORT:
+            image = pygame.image.load("./images/bogo.png")
+
         self.controller.register_code_block(
-            CodeBlock(25, 100, 375, 575, (0, 0, 0)))
+            CodeBlock(25, 100, image, (0, 0, 0)))
 
     def init_buttons(self):
         self.controller.register_button(
@@ -186,6 +194,20 @@ class View:
             Button("Prev", 225, 40, 24, True, LIGHT_GREY, (75, 40)))
         self.controller.register_button(
             Button("Next", 325, 40, 24, True, LIGHT_GREY, (75, 40)))
+
+    def init_title(self):
+        if self.controller.current_algorithm is Algorithm.INSERTION_SORT:
+            text = "Insertion Sort"
+        elif self.controller.current_algorithm is Algorithm.SELECTION_SORT:
+            text = "Selection Sort"
+        elif self.controller.current_algorithm is Algorithm.BUBBLE_SORT:
+            text = "Bubble Sort"
+        elif self.controller.current_algorithm is Algorithm.MERGE_SORT:
+            text = "Merge Sort"
+        elif self.controller.current_algorithm is Algorithm.BOGO_SORT:
+            text = "Bogo Sort"
+        self.controller.register_text(Text(text, 700, 50, 40))
+
 
     def update(self):
         self.canvas.fill(WHITE)

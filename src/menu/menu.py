@@ -202,7 +202,7 @@ def beginner():
         screen.blit(sort2_text, sort2_rect)
 
         sort3_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 2 * (button_height + button_spacing), button_width, button_height), 2)
-        sort3_text = font.render("B Sort 3", True, WHITE)
+        sort3_text = font.render("Counting Sort", True, WHITE)
         sort3_rect = sort3_text.get_rect(center=sort3_button.center)
         screen.blit(sort3_text, sort3_rect)
 
@@ -245,12 +245,12 @@ def intermediate():
         screen.blit(sort1_text, sort1_rect)
 
         sort2_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 1 * (button_height + button_spacing), button_width, button_height), 2)
-        sort2_text = font.render("I Sort 2", True, WHITE)
+        sort2_text = font.render("Bogo Sort", True, WHITE)
         sort2_rect = sort2_text.get_rect(center=sort2_button.center)
         screen.blit(sort2_text, sort2_rect)
 
         sort3_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 2 * (button_height + button_spacing), button_width, button_height), 2)
-        sort3_text = font.render("I Sort 3", True, WHITE)
+        sort3_text = font.render("Pancake Sort", True, WHITE)
         sort3_rect = sort3_text.get_rect(center=sort3_button.center)
         screen.blit(sort3_text, sort3_rect)
 
@@ -293,12 +293,12 @@ def advanced():
         screen.blit(sort1_text, sort1_rect)
 
         sort2_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 1 * (button_height + button_spacing), button_width, button_height), 2)
-        sort2_text = font.render("Bogo Sort", True, WHITE)
+        sort2_text = font.render("Quick Sort", True, WHITE)
         sort2_rect = sort2_text.get_rect(center=sort2_button.center)
         screen.blit(sort2_text, sort2_rect)
 
         sort3_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 2 * (button_height + button_spacing), button_width, button_height), 2)
-        sort3_text = font.render("A Sort 3", True, WHITE)
+        sort3_text = font.render("Heap Sort", True, WHITE)
         sort3_rect = sort3_text.get_rect(center=sort3_button.center)
         screen.blit(sort3_text, sort3_rect)
 
@@ -464,14 +464,20 @@ def signup():
 
 def bsort1_page():
     # Add code for beginner Sort 1 page here
-    bubble_sort = AnimationController()
-    bubble_sort.current_algorithm = Algorithm.BUBBLE_SORT
+    print(pygame.mouse.get_pressed()[0])
+    pygame.event.clear()
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            print(True)
+        else:
+            print(False)
+    print(pygame.mouse.get_pressed()[0])
+    bubble_sort = AnimationController(Algorithm.BUBBLE_SORT)
     bubble_sort.run()
 
 def bsort2_page():
     # Add code for beginner Sort 2 page here
-    selection_sort = AnimationController()
-    selection_sort.current_algorithm = Algorithm.SELECTION_SORT
+    selection_sort = AnimationController(Algorithm.SELECTION_SORT)
     selection_sort.run()
 
 def bsort3_page():
@@ -480,13 +486,13 @@ def bsort3_page():
 
 def isort1_page():
     # Add code for intermediate Sort 1 page here
-    insertion_sort = AnimationController()
-    insertion_sort.current_algorithm = Algorithm.INSERTION_SORT
+    insertion_sort = AnimationController(Algorithm.INSERTION_SORT)
     insertion_sort.run()
 
 def isort2_page():
     # Add code for intermediate Sort 2 page here
-    pass
+    bogo_sort = AnimationController(Algorithm.BOGO_SORT)
+    bogo_sort.run()
 
 def isort3_page():
     # Add code for intermediate Sort 3 page here
@@ -494,15 +500,12 @@ def isort3_page():
 
 def asort1_page():
     # Add code for advanced Sort 1 page here
-    merge_sort = AnimationController()
-    merge_sort.current_algorithm = Algorithm.MERGE_SORT
+    merge_sort = AnimationController(Algorithm.MERGE_SORT)
     merge_sort.run()
 
 def asort2_page():
     # Add code for advanced Sort 2 page here
-    bogo_sort = AnimationController()
-    bogo_sort.current_algorithm = Algorithm.BOGO_SORT
-    bogo_sort.run()
+    pass
 
 def asort3_page():
     # Add code for advanced Sort 3 page here

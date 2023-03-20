@@ -7,13 +7,13 @@ import src.menu as menu
 
 
 class Controller:
-    def __init__(self):
+    def __init__(self, algorithm=Algorithm.BUBBLE_SORT):
         self.numbers = ["7", "1", "8", "3", "5", "9", "4", "10", "6", "2"]
         self.number_cards = []
         self.code_blocks = []
         self.buttons = []
         self.surfaces = []
-        self.current_algorithm = Algorithm.SELECTION_SORT
+        self.current_algorithm = algorithm
 
         self.model = Model(self)
         self.view = View(self)
@@ -21,7 +21,10 @@ class Controller:
         self.allow_to_change = True
         self.started = False
 
+        self.quit = False
+
     def register_number_cards(self, number_card):
+        number_card.clicked = False
         self.number_cards.append(number_card)
         self.surfaces.append(number_card)
         self.buttons.append(number_card)
@@ -33,6 +36,9 @@ class Controller:
     def register_button(self, button):
         self.surfaces.append(button)
         self.buttons.append(button)
+
+    def register_text(self, text):
+        self.surfaces.append(text)
 
     def check_button_click(self):
         for button in self.buttons:
@@ -67,11 +73,12 @@ class Controller:
                 number_card.type_in(event)
 
     def check_events(self):
-        self.check_button_click()
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return True
+                self.quit = True
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.check_button_click()
 
             if self.allow_to_change:
                 # set all number cards to not typable when mouse is clicked anywhere
@@ -83,9 +90,11 @@ class Controller:
 
     def run(self):
         while True:
-            exit = self.check_events()
-            if exit:
+            # print(pygame.mouse.get_pressed()[0])
+            self.check_events()
+            if self.quit:
                 break
+
             self.view.update()
             self.model.update()
             for surface in self.surfaces:
