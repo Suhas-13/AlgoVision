@@ -11,8 +11,6 @@ height = 600
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Main Menu")
 
-BLACK = (0, 0, 0)
-GREY = pygame.Color("#D3D3D3")
 BLUE = (106, 159, 181)
 WHITE = (255, 255, 255)
 
