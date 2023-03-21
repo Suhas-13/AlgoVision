@@ -58,12 +58,12 @@ class NumberCardsHandler:
     def undo_rotation_immediately(self, index1, index2, reverse=False):
         card1, card2 = self.number_cards[index1], self.number_cards[index2]
         if reverse:
-            card1.moveto(CARD_X_POS[index2], CARD_Y_POS)
-            card2.moveto(CARD_X_POS[index1], CARD_Y_POS)
+            card1.moveto(CARD_X_POS[index2], CARD_Y_POS[2])
+            card2.moveto(CARD_X_POS[index1], CARD_Y_POS[2])
             self.number_cards[index1], self.number_cards[index2] = card2, card1
         else:
-            card1.moveto(CARD_X_POS[index1], CARD_Y_POS)
-            card2.moveto(CARD_X_POS[index2], CARD_Y_POS)
+            card1.moveto(CARD_X_POS[index1], CARD_Y_POS[2])
+            card2.moveto(CARD_X_POS[index2], CARD_Y_POS[2])
             self.number_cards[index1], self.number_cards[index2] = card2, card1
 
     def move_numbers(self, index1, index2):
@@ -116,12 +116,17 @@ class Model:
     def __init__(self, controller):
         self.controller = controller
         self.num_cards_handler = NumberCardsHandler(self.controller.number_cards)
-        self.moves = None
         self.current_move = None
 
         self.prev_move_stack = []
         self.next_move_stack = []
         self.pause = True
+        self.manual_mode = False
+
+    def reset(self):
+        self.cleanup_rotation()
+        self.prev_move_stack = list(reversed(self.moves))
+        self.next_move_stack = []
         self.manual_mode = False
 
     def cleanup_rotation(self, finish_rotation=False):

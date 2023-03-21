@@ -194,7 +194,9 @@ class View:
             Button("Prev", 225, 40, 24, True, LIGHT_GREY, (75, 40)))
         self.controller.register_button(
             Button("Next", 325, 40, 24, True, LIGHT_GREY, (75, 40)))
-
+        self.controller.register_button(
+            Button("Reset", 1095, 40, 24, True, LIGHT_GREY, (75, 40)))
+        
     def init_title(self):
         if self.controller.current_algorithm is Algorithm.INSERTION_SORT:
             text = "Insertion Sort"
