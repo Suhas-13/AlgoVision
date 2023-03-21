@@ -71,6 +71,8 @@ def student_mode():
     total_height = button_height * 3 + button_spacing * 2
 
     y_offset = (height - total_height) / 2 + 40
+    back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
+    pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
 
     while True:
         for event in pygame.event.get():
@@ -85,12 +87,16 @@ def student_mode():
                     intermediate()
                 elif a_button.collidepoint(pos):
                     advanced()
+                elif back_button.get_rect(topleft=(10, 10)).collidepoint(pos):
+                    mcq_menu()
 
         screen.fill(BLUE)
         font = pygame.font.SysFont('Courier', 40)
         title_text = font.render("Visualisations", True, WHITE)
         title_rect = title_text.get_rect(center=(width/2, height/4 - 20))
         screen.blit(title_text, title_rect)
+
+        screen.blit(back_button, (10, 10))
 
         b_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2 - border_width, y_offset + 0 * (button_height + button_spacing) - border_width, button_width + 2 * border_width, button_height + 2 * border_width), border_width)
         b_button_inner = pygame.draw.ellipse(screen, BLUE, ((width - button_width) / 2 + border_width, y_offset + 0 * (button_height + button_spacing) + border_width, button_width - 2 * border_width, button_height - 2 * border_width))
@@ -121,7 +127,9 @@ def mcq_menu():
 
     total_height = button_height * 3 + button_spacing * 2
     y_offset = (height - total_height) / 2 + button_height + button_spacing - 30
-
+    back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
+    pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
+    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -133,6 +141,8 @@ def mcq_menu():
                     student_mode()
                 elif mcq_button.collidepoint(pos):
                     mcq()
+                elif back_button.get_rect(topleft=(10, 10)).collidepoint(pos):
+                    main_menu()
 
 
         screen.fill(BLUE)
@@ -140,6 +150,8 @@ def mcq_menu():
         title_text = font.render("Student Mode", True, WHITE)
         title_rect = title_text.get_rect(center=(width/2, height/4))
         screen.blit(title_text, title_rect)
+
+        screen.blit(back_button, (10, 10))
 
         pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2 - border_width, y_offset + 0 * (button_height + button_spacing) - border_width, button_width + 2 * border_width, button_height + 2 * border_width), border_width)
         visual_button = pygame.draw.ellipse(screen, BLUE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height))
@@ -165,6 +177,8 @@ def beginner():
 
 
     y_offset = (height - total_height) / 2 + 30
+    back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
+    pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
 
     while True:
         for event in pygame.event.get():
@@ -179,6 +193,8 @@ def beginner():
                     bsort2_page()
                 elif sort3_button.collidepoint(pos):
                     bsort3_page()
+                elif back_button.get_rect(topleft=(10, 10)).collidepoint(pos):
+                    student_mode()
 
         screen.fill(BLUE)
 
@@ -187,6 +203,8 @@ def beginner():
         title_rect = title_text.get_rect(center=(width/2, height/4-40))
         screen.blit(title_text, title_rect)
 
+        screen.blit(back_button, (10, 10))
+        
         sort1_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height), 2)
         font = pygame.font.SysFont('Courier', 30)
         sort1_text = font.render("B Sort 1", True, WHITE)
@@ -214,6 +232,8 @@ def intermediate():
 
 
     y_offset = (height - total_height) / 2 + 30
+    back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
+    pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
 
     while True:
         for event in pygame.event.get():
@@ -228,12 +248,16 @@ def intermediate():
                     isort2_page()
                 elif sort3_button.collidepoint(pos):
                     isort3_page()
+                elif back_button.get_rect(topleft=(10, 10)).collidepoint(pos):
+                    student_mode()
 
         screen.fill(BLUE)
         font = pygame.font.SysFont('Courier', 40)
         title_text = font.render("Intermediate", True, WHITE)
         title_rect = title_text.get_rect(center=(width/2, height/4-40))
         screen.blit(title_text, title_rect)
+
+        screen.blit(back_button, (10, 10))
 
         sort1_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height), 2)
         font = pygame.font.SysFont('Courier', 30)
@@ -262,6 +286,9 @@ def advanced():
 
     y_offset = (height - total_height) / 2 + 30
 
+    back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
+    pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -275,13 +302,16 @@ def advanced():
                     asort2_page()
                 elif sort3_button.collidepoint(pos):
                     asort3_page()
-
+                elif back_button.get_rect(topleft=(10, 10)).collidepoint(pos):
+                    student_mode()
 
         screen.fill(BLUE)
         font = pygame.font.SysFont('Courier', 40)
         title_text = font.render("Advanced", True, WHITE)
         title_rect = title_text.get_rect(center=(width/2, height/4-40))
         screen.blit(title_text, title_rect)
+
+        screen.blit(back_button, (10, 10))
 
         sort1_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height), 2)
         font = pygame.font.SysFont('Courier', 30)
@@ -310,7 +340,9 @@ def teacher_mode():
     total_height = button_height * 3 + button_spacing * 2
 
     y_offset = (height - total_height) / 2 + button_height + button_spacing - 30
-
+    back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
+    pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
+    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -322,6 +354,8 @@ def teacher_mode():
                     login()
                 elif signup_button.collidepoint(pos):
                     signup()
+                elif back_button.get_rect(topleft=(10, 10)).collidepoint(pos):
+                    main_menu()
 
         screen.fill(BLUE)
 
@@ -329,6 +363,8 @@ def teacher_mode():
         title_text = font.render("Teacher Mode", True, WHITE)
         title_rect = title_text.get_rect(center=(width/2, height/4))
         screen.blit(title_text, title_rect)
+
+        screen.blit(back_button, (10, 10))
 
         pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2 - border_width, y_offset + 0 * (button_height + button_spacing) - border_width, button_width + 2 * border_width, button_height + 2 * border_width), border_width)
         login_button = pygame.draw.ellipse(screen, BLUE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height))
@@ -356,12 +392,19 @@ def login():
     name_input = False
     code_input = False
 
-
+    back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
+    pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
+    
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                pos = pygame.mouse.get_pos()
+                if back_button.get_rect(topleft=(10, 10)).collidepoint(pos):
+                    teacher_mode()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     if not name_input:
@@ -397,10 +440,26 @@ def login():
                 text = font.render('Logged in', True, WHITE)
                 running = False
             else:
-                text = font.render('Incorrect name or code.', True, WHITE) #needs to allow user to login again
+                text = font.render('Incorrect name or code. Press try again.', True, WHITE)
+                name = ''
+                code = ''
+                name_input = False
+                code_input = False
+                text_rect = text.get_rect(center=(width/2, height/2))
+                screen.blit(text, text_rect)
+                pygame.display.update()
+                waiting = True
+                while waiting:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            waiting = False
+                            break
+                        elif event.type == pygame.QUIT:
+                            pygame.quit()
+                            sys.exit()
+                
 
-
-        
+        screen.blit(back_button, (10, 10))
         text_rect = text.get_rect(center=(width/2, height/2))
         screen.blit(text, text_rect)
         pygame.display.update()
@@ -417,16 +476,27 @@ def signup():
     name_input = False
     code_input = False
 
+    back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
+    pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
+
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                pos = pygame.mouse.get_pos()
+                if back_button.get_rect(topleft=(10, 10)).collidepoint(pos):
+                    teacher_mode()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     if not name_input:
                         name_input = True
                         print(f"Name: {name}")
+                elif event.key == pygame.K_BACKSPACE:
+                    if len(name) > 0:
+                        name = name[:-1]
                 else:
                     if not name_input:
                         name += event.unicode
@@ -445,7 +515,10 @@ def signup():
                         data_exists = True
                     else:
                         data_exists = False
-                        text = font.render('Your classroom code is ' + code, True, WHITE) #needs to show up
+                        text = font.render('Your classroom code is ' + code, True, WHITE)
+                        text_rect = text.get_rect(center=(width/2, height/2))
+                        screen.blit(text, text_rect)
+                        pygame.display.update()
                         running = False
 
                         
@@ -453,8 +526,7 @@ def signup():
             with open('teachers.json', 'w') as file:
                 json.dump(data, file)
 
-        
-        
+        screen.blit(back_button, (10, 10))
         text_rect = text.get_rect(center=(width/2, height/2))
         screen.blit(text, text_rect)
         pygame.display.update()
@@ -499,4 +571,3 @@ def mcq():
     pass
 
 main_menu()
-
