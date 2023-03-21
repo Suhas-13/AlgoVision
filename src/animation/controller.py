@@ -27,11 +27,10 @@ class Controller:
 
     def reset_all_cards(self):
         # take self.numbers and reset the cards
-        print(self.reset_numbers)
         for i in range(10):
             self.number_cards[i].text = self.reset_numbers[i]
             self.number_cards[i].clicked = False
-            self.number_cards[i].update(self.reset_numbers[i])
+            #self.number_cards[i].update(self.reset_numbers[i])
             self.number_cards[i].unhighlight()
             self.number_cards[i].typable = False
             self.number_cards[i].highlighted = False
@@ -58,12 +57,8 @@ class Controller:
 
     def check_button_click(self):
         for button in self.buttons:
-            print("Checking button")
             if button.check_mouseclick():
-                print("Button clicked: " + button.text)
                 if button.text == "Play":
-                    print("Trying to start")
-                    print(self.started, self.model.pause)
                     if not self.started:
                         self.started = True
                         self.model.start()
@@ -101,18 +96,17 @@ class Controller:
 
     def check_events(self):
         for event in pygame.event.get():
-            print("Event: " + str(event.type))
             if event.type == pygame.QUIT:
                 self.quit = True
 
-            if 1024 <= event.type <= 1027:
+            if 1024 <= event.type <= 1028:
                 self.check_button_click()
 
-                if self.allow_to_change:
-                    # set all number cards to not typable when mouse is clicked anywhere
+            if self.allow_to_change:
+                if event.type == pygame.MOUSEBUTTONDOWN:
                     for number_card in self.number_cards:
                         number_card.set_typable(False)
-                    self.check_change_numbers(event)
+            self.check_change_numbers(event)
 
     def run(self):
         while True:
