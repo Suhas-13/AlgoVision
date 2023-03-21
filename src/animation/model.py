@@ -43,6 +43,7 @@ class NumberCardsHandler:
                                round(distance[0]), CARD_Y_POS[2] + round(distance[1])
             card2.x, card2.y = CARD_X_POS[index2] - \
                                round(distance[0]), CARD_Y_POS[2] - round(distance[1])
+        pygame.time.delay(5)
 
     def check_rotation_complete(self, index1, index2):
         card1, card2 = self.number_cards[index1], self.number_cards[index2]
@@ -54,6 +55,7 @@ class NumberCardsHandler:
             self.timer = 0
             self.number_cards[index1], self.number_cards[index2] = card2, card1
             self.prev_next_disabled = False
+        pygame.time.delay(5)
 
     def undo_rotation_immediately(self, index1, index2, reverse=False):
         card1, card2 = self.number_cards[index1], self.number_cards[index2]

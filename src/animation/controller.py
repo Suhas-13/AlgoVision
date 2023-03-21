@@ -58,6 +58,7 @@ class Controller:
 
     def check_button_click(self):
         for button in self.buttons:
+            print("Checking button")
             if button.check_mouseclick():
                 print("Button clicked: " + button.text)
                 if button.text == "Play":
@@ -100,20 +101,18 @@ class Controller:
 
     def check_events(self):
         for event in pygame.event.get():
-            print(event.type)
+            print("Event: " + str(event.type))
             if event.type == pygame.QUIT:
                 self.quit = True
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if 1024 <= event.type <= 1027:
                 self.check_button_click()
 
-            if self.allow_to_change:
-                # set all number cards to not typable when mouse is clicked anywhere
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if self.allow_to_change:
+                    # set all number cards to not typable when mouse is clicked anywhere
                     for number_card in self.number_cards:
                         number_card.set_typable(False)
-
-                self.check_change_numbers(event)
+                    self.check_change_numbers(event)
 
     def run(self):
         while True:
@@ -121,7 +120,6 @@ class Controller:
             self.check_events()
             if self.quit:
                 break
-            pygame.time.delay(10)
             self.view.update()
             self.model.update()
             for surface in self.surfaces:
