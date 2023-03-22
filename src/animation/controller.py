@@ -23,7 +23,6 @@ class Controller:
         self.started = False
 
         self.quit = False
-        print(pygame.mouse.get_pressed()[0])
 
 
     def reset_all_cards(self):
@@ -83,6 +82,8 @@ class Controller:
                     self.started = False
                     self.reset_all_cards()
                     self.model.reset()
+                elif button.text == "Back":
+                    self.quit = True
  
 
     def check_change_numbers(self, event):

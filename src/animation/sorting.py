@@ -170,13 +170,11 @@ class MergeSort(SortingAlgorithm):
                 self.moves.append(NumberCardOperations.create_merge_operation(k, i))
                 i += 1
             elif aux[j] < aux[i]:
-                print(j, i)
                 self.moves.append(NumberCardOperations.create_compare_operation(j, i))
                 arr[k] = aux[j]
                 self.moves.append(NumberCardOperations.create_merge_operation(k, j))
                 j += 1
             else:
-                print(j, i)
                 self.moves.append(NumberCardOperations.create_compare_operation(j, i))
                 arr[k] = aux[i]
                 self.moves.append(NumberCardOperations.create_merge_operation(k, i))

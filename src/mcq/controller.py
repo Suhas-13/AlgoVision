@@ -11,7 +11,7 @@ from .view import *
 class Controller:
     def __init__(self, questionNumber=1, mode="bubble", points=0):
         self.database = self.openFile()
-
+        self.init_click = True
         self.answers = []
         self.surfaces = []
         self.questions = []
@@ -46,7 +46,12 @@ class Controller:
 
     def check_answerBox_click(self):
         for answer in self.answers:
+            if self.init_click:
+                break
+
             if answer.check_mouseClick():
+                # prevent automatic click
+                
                 if answer.correct:
                     self.addPoint()
                     answer.click = False
@@ -64,6 +69,8 @@ class Controller:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            elif event.type == pygame.MOUSEBUTTONUP and self.init_click:
+                self.init_click = False
 
     def run(self):
         while True:
@@ -81,7 +88,7 @@ class Controller:
 
             if self.answered:
                 self.answered = False
-                self.point_box.update(f"Points: {self.points}")
+                self.point_box.update(f"Points: {self.points} / {self.questionNumber}")
                 pygame.time.delay(1000)
                 self.model.next_question()
 
