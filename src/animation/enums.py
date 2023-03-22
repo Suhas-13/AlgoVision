@@ -6,4 +6,4 @@ class Algorithm(Enum):
     SELECTION_SORT = 2
     INSERTION_SORT = 3
     BOGO_SORT = 4
-    MERGE_SORT = 4
+    MERGE_SORT = 5

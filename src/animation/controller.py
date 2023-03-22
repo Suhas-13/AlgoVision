@@ -23,6 +23,7 @@ class Controller:
         self.started = False
 
         self.quit = False
+        print(pygame.mouse.get_pressed()[0])
 
 
     def reset_all_cards(self):

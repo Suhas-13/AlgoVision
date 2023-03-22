@@ -85,5 +85,5 @@ class Controller:
                 pygame.time.delay(1000)
                 self.model.next_question()
 
-                if self.questionNumber == 11:
+                if self.questionNumber == 10:
                     return
