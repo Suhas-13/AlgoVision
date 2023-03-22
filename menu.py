@@ -4,13 +4,10 @@ import json
 import random
 import string
 
-from src.animation.controller import Controller as AnimationController
-from src.animation.enums import Algorithm
-
 pygame.init()
 
-width = 1200
-height = 700
+width = 800
+height = 600
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Main Menu")
 
@@ -97,6 +94,8 @@ def student_mode():
         title_rect = title_text.get_rect(center=(width/2, height/4 - 20))
         screen.blit(title_text, title_rect)
 
+        screen.blit(back_button, (10, 10))
+
         b_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2 - border_width, y_offset + 0 * (button_height + button_spacing) - border_width, button_width + 2 * border_width, button_height + 2 * border_width), border_width)
         b_button_inner = pygame.draw.ellipse(screen, BLUE, ((width - button_width) / 2 + border_width, y_offset + 0 * (button_height + button_spacing) + border_width, button_width - 2 * border_width, button_height - 2 * border_width))
         font = pygame.font.SysFont('Courier', 30)
@@ -128,7 +127,7 @@ def mcq_menu():
     y_offset = (height - total_height) / 2 + button_height + button_spacing - 30
     back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
     pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
-
+    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -203,20 +202,20 @@ def beginner():
         screen.blit(title_text, title_rect)
 
         screen.blit(back_button, (10, 10))
-
+        
         sort1_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height), 2)
         font = pygame.font.SysFont('Courier', 30)
-        sort1_text = font.render("Bubble Sort", True, WHITE)
+        sort1_text = font.render("B Sort 1", True, WHITE)
         sort1_rect = sort1_text.get_rect(center=sort1_button.center)
         screen.blit(sort1_text, sort1_rect)
 
         sort2_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 1 * (button_height + button_spacing), button_width, button_height), 2)
-        sort2_text = font.render("Selection Sort", True, WHITE)
+        sort2_text = font.render("B Sort 2", True, WHITE)
         sort2_rect = sort2_text.get_rect(center=sort2_button.center)
         screen.blit(sort2_text, sort2_rect)
 
         sort3_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 2 * (button_height + button_spacing), button_width, button_height), 2)
-        sort3_text = font.render("Counting Sort", True, WHITE)
+        sort3_text = font.render("B Sort 3", True, WHITE)
         sort3_rect = sort3_text.get_rect(center=sort3_button.center)
         screen.blit(sort3_text, sort3_rect)
 
@@ -260,17 +259,17 @@ def intermediate():
 
         sort1_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height), 2)
         font = pygame.font.SysFont('Courier', 30)
-        sort1_text = font.render("Insertion Sort", True, WHITE)
+        sort1_text = font.render("I Sort 1", True, WHITE)
         sort1_rect = sort1_text.get_rect(center=sort1_button.center)
         screen.blit(sort1_text, sort1_rect)
 
         sort2_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 1 * (button_height + button_spacing), button_width, button_height), 2)
-        sort2_text = font.render("Bogo Sort", True, WHITE)
+        sort2_text = font.render("I Sort 2", True, WHITE)
         sort2_rect = sort2_text.get_rect(center=sort2_button.center)
         screen.blit(sort2_text, sort2_rect)
 
         sort3_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 2 * (button_height + button_spacing), button_width, button_height), 2)
-        sort3_text = font.render("Pancake Sort", True, WHITE)
+        sort3_text = font.render("I Sort 3", True, WHITE)
         sort3_rect = sort3_text.get_rect(center=sort3_button.center)
         screen.blit(sort3_text, sort3_rect)
 
@@ -314,17 +313,17 @@ def advanced():
 
         sort1_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 0 * (button_height + button_spacing), button_width, button_height), 2)
         font = pygame.font.SysFont('Courier', 30)
-        sort1_text = font.render("Merge Sort", True, WHITE)
+        sort1_text = font.render("A Sort 1", True, WHITE)
         sort1_rect = sort1_text.get_rect(center=sort1_button.center)
         screen.blit(sort1_text, sort1_rect)
 
         sort2_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 1 * (button_height + button_spacing), button_width, button_height), 2)
-        sort2_text = font.render("Quick Sort", True, WHITE)
+        sort2_text = font.render("A Sort 2", True, WHITE)
         sort2_rect = sort2_text.get_rect(center=sort2_button.center)
         screen.blit(sort2_text, sort2_rect)
 
         sort3_button = pygame.draw.ellipse(screen, WHITE, ((width - button_width) / 2, y_offset + 2 * (button_height + button_spacing), button_width, button_height), 2)
-        sort3_text = font.render("Heap Sort", True, WHITE)
+        sort3_text = font.render("A Sort 3", True, WHITE)
         sort3_rect = sort3_text.get_rect(center=sort3_button.center)
         screen.blit(sort3_text, sort3_rect)
 
@@ -341,7 +340,7 @@ def teacher_mode():
     y_offset = (height - total_height) / 2 + button_height + button_spacing - 30
     back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
     pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
-
+    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -393,7 +392,7 @@ def login():
 
     back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
     pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
-
+    
     running = True
     while running:
         for event in pygame.event.get():
@@ -456,7 +455,7 @@ def login():
                         elif event.type == pygame.QUIT:
                             pygame.quit()
                             sys.exit()
-
+                
 
         screen.blit(back_button, (10, 10))
         text_rect = text.get_rect(center=(width/2, height/2))
@@ -532,21 +531,11 @@ def signup():
 
 def bsort1_page():
     # Add code for beginner Sort 1 page here
-    print(pygame.mouse.get_pressed()[0])
-    pygame.event.clear()
-    for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print(True)
-        else:
-            print(False)
-    print(pygame.mouse.get_pressed()[0])
-    bubble_sort = AnimationController(Algorithm.BUBBLE_SORT)
-    bubble_sort.run()
+    pass
 
 def bsort2_page():
     # Add code for beginner Sort 2 page here
-    selection_sort = AnimationController(Algorithm.SELECTION_SORT)
-    selection_sort.run()
+    pass
 
 def bsort3_page():
     # Add code for beginner Sort 3 page here
@@ -554,13 +543,11 @@ def bsort3_page():
 
 def isort1_page():
     # Add code for intermediate Sort 1 page here
-    insertion_sort = AnimationController(Algorithm.INSERTION_SORT)
-    insertion_sort.run()
+    pass
 
 def isort2_page():
     # Add code for intermediate Sort 2 page here
-    bogo_sort = AnimationController(Algorithm.BOGO_SORT)
-    bogo_sort.run()
+    pass
 
 def isort3_page():
     # Add code for intermediate Sort 3 page here
@@ -568,8 +555,7 @@ def isort3_page():
 
 def asort1_page():
     # Add code for advanced Sort 1 page here
-    merge_sort = AnimationController(Algorithm.MERGE_SORT)
-    merge_sort.run()
+    pass
 
 def asort2_page():
     # Add code for advanced Sort 2 page here
@@ -582,8 +568,4 @@ def asort3_page():
 def mcq():
     pass
 
-
-if __name__ == "__main__":
-    main_menu()
-
-
+main_menu()
