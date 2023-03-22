@@ -453,10 +453,8 @@ def login():
                 if event.key == pygame.K_RETURN:
                     if not name_input:
                         name_input = True
-                        print(f"Name: {name}")
                     elif not code_input:
                         code_input = True
-                        print(f"Code: {code}")
                 elif event.key == pygame.K_BACKSPACE:
                     if not code_input and len(name) > 0:
                         name = name[:-1]
@@ -511,13 +509,12 @@ def login():
 def signup():
     font = pygame.font.SysFont('Courier', 30)
 
-    with open('../../datas/teachers.json', 'r') as file:
+    with open('./datas/teachers.json', 'r') as file:
         data = json.load(file)
 
     name = ''
     code = ''
     name_input = False
-    code_input = False
 
     back_button = pygame.Surface((30, 30), pygame.SRCALPHA)
     pygame.draw.polygon(back_button, WHITE, [(15, 5), (5, 15), (15, 25)], 2)
@@ -536,7 +533,6 @@ def signup():
                 if event.key == pygame.K_RETURN:
                     if not name_input:
                         name_input = True
-                        print(f"Name: {name}")
                 elif event.key == pygame.K_BACKSPACE:
                     if len(name) > 0:
                         name = name[:-1]
@@ -549,24 +545,17 @@ def signup():
         if not name_input:
             text = font.render('Enter your name: ' + name, True, WHITE)
         else:
-            data_exists = True
-            while data_exists == True:
-                code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
-                print(code)
-                for item in data['teachers']:
-                    if item['classroom_code'] == code:
-                        data_exists = True
-                    else:
-                        data_exists = False
-                        text = font.render('Your classroom code is ' + code, True, WHITE)
-                        text_rect = text.get_rect(center=(width / 2, height / 2))
-                        screen.blit(text, text_rect)
-                        pygame.display.update()
-                        running = False
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+            text = font.render('Your classroom code is ' + code, True, WHITE)
+            text_rect = text.get_rect(center=(width / 2, height / 2))
+            screen.blit(text, text_rect)
 
             data['teachers'].append({'name': name, 'classroom_code': code})
-            with open('../../datas/teachers.json', 'w') as file:
+            with open('./datas/teachers.json', 'w') as file:
                 json.dump(data, file)
+            running = False
+            for i in range(0, 1000):
+                pygame.display.update()
 
         screen.blit(back_button, (10, 10))
         text_rect = text.get_rect(center=(width / 2, height / 2))
@@ -576,14 +565,7 @@ def signup():
 
 def bsort1_page():
     # Add code for beginner Sort 1 page here
-    print(pygame.mouse.get_pressed()[0])
     pygame.event.clear()
-    for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print(True)
-        else:
-            print(False)
-    print(pygame.mouse.get_pressed()[0])
     bubble_sort = AnimationController(Algorithm.BUBBLE_SORT)
     bubble_sort.run()
 
