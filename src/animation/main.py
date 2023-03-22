@@ -1,4 +1,4 @@
-from controller import Controller
+from src.mcq.controller import Controller
 from enums import Algorithm
 
 game = Controller(Algorithm.SELECTION_SORT)

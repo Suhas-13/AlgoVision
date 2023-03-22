@@ -7,6 +7,8 @@ import string
 from src.animation.controller import Controller as AnimationController
 from src.animation.enums import Algorithm
 
+from src.mcq.controller import Controller as MCQController
+
 pygame.init()
 
 width = 1200
@@ -426,7 +428,7 @@ def teacher_mode():
 def login():
     font = pygame.font.SysFont('Courier', 30)
 
-    with open('teachers.json', 'r') as file:
+    with open('./datas/teachers.json', 'r') as file:
         data = json.load(file)
 
     name = ''
@@ -509,7 +511,7 @@ def login():
 def signup():
     font = pygame.font.SysFont('Courier', 30)
 
-    with open('teachers.json', 'r') as file:
+    with open('../../datas/teachers.json', 'r') as file:
         data = json.load(file)
 
     name = ''
@@ -563,7 +565,7 @@ def signup():
                         running = False
 
             data['teachers'].append({'name': name, 'classroom_code': code})
-            with open('teachers.json', 'w') as file:
+            with open('../../datas/teachers.json', 'w') as file:
                 json.dump(data, file)
 
         screen.blit(back_button, (10, 10))
@@ -631,7 +633,7 @@ def asort3_page():
 
 
 def mcq():
-    pass
+    MCQController(mode="bubble").run()
 
 
 if __name__ == "__main__":
