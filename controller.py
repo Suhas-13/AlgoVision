@@ -4,13 +4,19 @@ import time
 
 from model import Model
 from view import *
-from user import *
+
+
+# from user import *
 
 class Controller:
-    def __init__(self, questionNumber=1, mode = "bubble", points = 0):
+    def __init__(self, questionNumber=1, mode="bubble", points=0):
+        self.database = self.openFile()
+
         self.answers = []
         self.surfaces = []
         self.questions = []
+        self.point_box = None
+
         self.questionNumber = questionNumber
         self.mode = mode
         self.points = points
@@ -18,10 +24,19 @@ class Controller:
         self.model = Model(self)
         self.view = View(self)
 
+        self.answered = False
+
+    def openFile(self):
+        file = open("mcq.json")
+        database = json.load(file)
+        file.close()
+        return database
+
+
     def register_answer_boxes(self, answer):
         self.surfaces.append(answer)
         self.answers.append(answer)
-    
+
     def register_question_box(self, question):
         self.questions.append(question)
         self.surfaces.append(question)
@@ -34,12 +49,15 @@ class Controller:
             if answer.check_mouseClick():
                 if answer.correct:
                     self.addPoint()
-                    self.questionNumber += 1
-                    time.sleep(3)
+                    answer.click = False
+                    answer.correctAnswer()
+                    self.answered = True
+                    break
                 if not answer.correct:
-                    self.questionNumber += 1
-                    time.sleep(3)
-                    pass
+                    answer.incorrectAnswer()
+                    answer.click = False
+                    self.answered = True
+                    break
 
     def check_exit(self):
         for event in pygame.event.get():
@@ -56,7 +74,16 @@ class Controller:
             for surface in self.surfaces:
                 surface.draw(self.view.canvas)
 
-            
+            self.point_box.draw(self.view.canvas)
 
             self.model.update()
             pygame.display.update()
+
+            if self.answered:
+                self.answered = False
+                self.point_box.update(f"Points: {self.points}")
+                pygame.time.delay(1000)
+                self.model.next_question()
+
+                if self.questionNumber == 11:
+                    return
