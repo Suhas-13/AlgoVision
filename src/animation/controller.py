@@ -12,6 +12,7 @@ class Controller:
         self.number_cards = []
         self.code_blocks = []
         self.buttons = []
+        self.reset_numbers = self.numbers.copy()
         self.surfaces = []
         self.current_algorithm = algorithm
 
@@ -23,6 +24,20 @@ class Controller:
 
         self.quit = False
 
+
+    def reset_all_cards(self):
+        # take self.numbers and reset the cards
+        for i in range(10):
+            self.number_cards[i].text = self.reset_numbers[i]
+            self.number_cards[i].clicked = False
+            #self.number_cards[i].update(self.reset_numbers[i])
+            self.number_cards[i].unhighlight()
+            self.number_cards[i].typable = False
+            self.number_cards[i].highlighted = False
+
+
+    def update_reset_numbers(self):
+        self.reset_numbers = self.numbers.copy()
     def register_number_cards(self, number_card):
         number_card.clicked = False
         self.number_cards.append(number_card)
@@ -49,6 +64,7 @@ class Controller:
                         self.model.start()
                     elif self.model.pause:
                         self.model.pause = False
+                        self.started = True
                 elif button.text == "Pause":
                     self.model.pause = True
                     # self.model.cleanup_rotation()
@@ -62,6 +78,10 @@ class Controller:
                     self.model.cleanup_rotation(finish_rotation=True)
                     self.model.manual_mode = True
                     self.model.redo_move()
+                elif button.text == "Reset":
+                    self.started = False
+                    self.reset_all_cards()
+                    self.model.reset()
 
     def check_change_numbers(self, event):
         for number_card in self.number_cards:
@@ -71,22 +91,22 @@ class Controller:
             # then process keydown events
             if number_card.typable and event.type == pygame.KEYDOWN:
                 number_card.type_in(event)
+                self.numbers = [number_card.text for number_card in self.number_cards]
+                self.update_reset_numbers()
 
     def check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit = True
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if 1024 <= event.type <= 1028:
                 self.check_button_click()
 
             if self.allow_to_change:
-                # set all number cards to not typable when mouse is clicked anywhere
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for number_card in self.number_cards:
                         number_card.set_typable(False)
-
-                self.check_change_numbers(event)
+            self.check_change_numbers(event)
 
     def run(self):
         while True:
@@ -94,7 +114,6 @@ class Controller:
             self.check_events()
             if self.quit:
                 break
-
             self.view.update()
             self.model.update()
             for surface in self.surfaces:
