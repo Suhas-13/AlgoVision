@@ -150,7 +150,7 @@ class View:
         pygame.init()
         self.controller = controller
         self.canvas = pygame.display.set_mode((CANVAS_WIDTH, CANVAS_HEIGHT))
-        self.canvas.fill(WHITE)
+        self.canvas.fill(BLUE)
         pygame.display.set_caption("AlgoVision")
 
         self.init_number_cards(self.controller.numbers)
@@ -195,7 +195,9 @@ class View:
         self.controller.register_button(
             Button("Next", 325, 40, 24, True, LIGHT_GREY, (75, 40)))
         self.controller.register_button(
-            Button("Reset", 1095, 40, 24, True, LIGHT_GREY, (75, 40)))
+            Button("Reset", 1025, 40, 24, True, LIGHT_GREY, (75, 40)))
+        self.controller.register_button(
+            Button("Back", 1110, 40, 24, True, LIGHT_GREY, (75, 40)))
         
     def init_title(self):
         if self.controller.current_algorithm is Algorithm.INSERTION_SORT:
@@ -208,8 +210,8 @@ class View:
             text = "Merge Sort"
         elif self.controller.current_algorithm is Algorithm.BOGO_SORT:
             text = "Bogo Sort"
-        self.controller.register_text(Text(text, 700, 50, 40))
+        self.controller.register_text(Text(text, 600, 35, 40))
 
 
     def update(self):
-        self.canvas.fill(WHITE)
+        self.canvas.fill(BLUE)
