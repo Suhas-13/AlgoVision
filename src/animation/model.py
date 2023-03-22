@@ -115,7 +115,7 @@ class NumberCardsHandler:
 class Model:
     def __init__(self, controller):
         self.controller = controller
-        self.num_cards_handler = NumberCardsHandler(self.controller.number_cards)
+        self.num_cards_handler = NumberCardsHandler([])
         self.current_move = None
 
         self.prev_move_stack = []
@@ -139,11 +139,14 @@ class Model:
             self.num_cards_handler.rotating = False
 
     def change_numbers(self):
-        for idx, num_card in enumerate(self.controller.number_cards):
+        for idx, num_card in enumerate(self.num_cards_handler.number_cards):
             if num_card.text != str(self.controller.numbers[idx]):
                 self.controller.numbers[idx] = num_card.text
 
     def start(self):
+        for num_card in self.num_cards_handler.number_cards:
+            num_card.unhighlight()
+
         self.controller.numbers = [int(num) for num in self.controller.numbers]
 
         if self.controller.current_algorithm is Algorithm.SELECTION_SORT:
@@ -175,13 +178,13 @@ class Model:
         if move is None:
             return
         if move[0] == NumberCardOperations.COMPARE:
-            self.controller.number_cards[move[1]].unhighlight()
-            self.controller.number_cards[move[2]].unhighlight()
+            self.num_cards_handler.number_cards[move[1]].unhighlight()
+            self.num_cards_handler.number_cards[move[2]].unhighlight()
 
     def highlight(self, move):
         if move[0] == NumberCardOperations.COMPARE:
-            self.controller.number_cards[move[1]].highlight()
-            self.controller.number_cards[move[2]].highlight()
+            self.num_cards_handler.number_cards[move[1]].highlight()
+            self.num_cards_handler.number_cards[move[2]].highlight()
 
     def redo_move(self):
         if len(self.next_move_stack) == 0:
@@ -240,7 +243,7 @@ class Model:
         if not self.num_cards_handler.rotating:
             if len(self.next_move_stack) == 0:
                 self.pause = True
-                for card in self.controller.number_cards:
+                for card in self.num_cards_handler.number_cards:
                     card.unhighlight()
                 return
             prev_move = self.get_last_move()

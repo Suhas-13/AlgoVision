@@ -9,9 +9,9 @@ import src.menu as menu
 class Controller:
     def __init__(self, algorithm=Algorithm.BUBBLE_SORT):
         self.numbers = ["7", "1", "8", "3", "5", "9", "4", "10", "6", "2"]
-        self.number_cards = []
         self.code_blocks = []
         self.buttons = []
+        self.button_handling = False
         self.reset_numbers = self.numbers.copy()
         self.surfaces = []
         self.current_algorithm = algorithm
@@ -26,21 +26,21 @@ class Controller:
 
 
     def reset_all_cards(self):
-        # take self.numbers and reset the cards
         for i in range(10):
-            self.number_cards[i].text = self.reset_numbers[i]
-            self.number_cards[i].clicked = False
-            #self.number_cards[i].update(self.reset_numbers[i])
-            self.number_cards[i].unhighlight()
-            self.number_cards[i].typable = False
-            self.number_cards[i].highlighted = False
+            # self.number_cards[i].text = self.reset_numbers[i]\
+            self.model.num_cards_handler.number_cards[i].clicked = False
+            self.model.num_cards_handler.number_cards[i].update(self.reset_numbers[i])
+            self.model.num_cards_handler.number_cards[i].unhighlight()
+            self.model.num_cards_handler.number_cards[i].typable = False
+            self.model.num_cards_handler.number_cards[i].highlighted = False
 
 
     def update_reset_numbers(self):
         self.reset_numbers = self.numbers.copy()
+
     def register_number_cards(self, number_card):
         number_card.clicked = False
-        self.number_cards.append(number_card)
+        self.model.num_cards_handler.number_cards.append(number_card)
         self.surfaces.append(number_card)
         self.buttons.append(number_card)
 
@@ -82,31 +82,36 @@ class Controller:
                     self.started = False
                     self.reset_all_cards()
                     self.model.reset()
+ 
 
     def check_change_numbers(self, event):
-        for number_card in self.number_cards:
+        for number_card in self.model.num_cards_handler.number_cards:
             # set typalbe first
             number_card.check_typable()
 
             # then process keydown events
             if number_card.typable and event.type == pygame.KEYDOWN:
                 number_card.type_in(event)
-                self.numbers = [number_card.text for number_card in self.number_cards]
+                self.numbers = [number_card.text for number_card in self.model.num_cards_handler.number_cards]
                 self.update_reset_numbers()
 
     def check_events(self):
         for event in pygame.event.get():
+            pygame.event.clear()
             if event.type == pygame.QUIT:
                 self.quit = True
-
-            if 1024 <= event.type <= 1028:
-                self.check_button_click()
-
-            if self.allow_to_change:
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    for number_card in self.number_cards:
-                        number_card.set_typable(False)
-            self.check_change_numbers(event)
+            if self.button_handling == False and event.type == pygame.MOUSEBUTTONDOWN:
+                self.button_handling = True
+                
+            if self.button_handling:
+                if 1024 <= event.type <= 1028:
+                    self.check_button_click()
+                
+                if self.allow_to_change:
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        for number_card in self.model.num_cards_handler.number_cards:
+                            number_card.set_typable(False)
+                self.check_change_numbers(event)
 
     def run(self):
         while True:

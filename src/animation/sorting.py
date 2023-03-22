@@ -87,9 +87,7 @@ class InsertionSort(SortingAlgorithm):
             while j >= 0 and key < self.array[j]:
                 self.array[j + 1] = self.array[j]
                 moves.append(
-                    NumberCardOperations.create_compare_operation(i, j))
-                moves.append(
-                    NumberCardOperations.create_compare_operation(i, j))
+                    NumberCardOperations.create_compare_operation(j, j+1))
                 moves.append(
                     NumberCardOperations.create_swap_operation(j, j + 1))
                 j -= 1
@@ -142,8 +140,6 @@ class MergeSort(SortingAlgorithm):
         super().__init__(array)
         self.moves = []
         self.merge_sort(self.array, self.array.copy(), 0, len(self.array) - 1)
-        print(self.moves)
-        print(self.array)
 
     def merge_sort(self, arr, aux, low, high):
         if low < high:
@@ -174,10 +170,14 @@ class MergeSort(SortingAlgorithm):
                 self.moves.append(NumberCardOperations.create_merge_operation(k, i))
                 i += 1
             elif aux[j] < aux[i]:
+                print(j, i)
+                self.moves.append(NumberCardOperations.create_compare_operation(j, i))
                 arr[k] = aux[j]
                 self.moves.append(NumberCardOperations.create_merge_operation(k, j))
                 j += 1
             else:
+                print(j, i)
+                self.moves.append(NumberCardOperations.create_compare_operation(j, i))
                 arr[k] = aux[i]
                 self.moves.append(NumberCardOperations.create_merge_operation(k, i))
                 i += 1
