@@ -4,6 +4,7 @@ from .constants import *
 from .enums import Algorithm
 
 
+# parent class for surfaces including text
 class Text:
     def __init__(self, text, x, y, size, draw_background=False, rect_color=None, rect_size=None):
         self.text = text
@@ -53,6 +54,7 @@ class Button(Text):
 
         self.clicked = False
 
+    # check if mouse is on button and if mouse is clicked
     def check_mouseclick(self):
         pos = pygame.mouse.get_pos()  # get mouse position
 
@@ -110,7 +112,6 @@ class NumCard(Button):
         else:  # maximum length 2
             self.text += event.unicode if len(self.text) <= 1 else ""
         self.update(self.text)
-        self.highlighted = False
         self.highlight(BLACK)
 
     def set_typable(self, typable):
@@ -124,6 +125,7 @@ class NumCard(Button):
 
     def check_typable(self):
         self.check_mouseclick()
+        # only allow type to be set to true if it is not already typable and was clicked
         if self.typable and self.clicked:
             self.set_typable(False)
         elif not self.typable and self.clicked:

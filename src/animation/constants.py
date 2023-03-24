@@ -13,9 +13,11 @@ BLUE = (106, 159, 181)
 SQUARE_SIZE = 50
 GAP = 75
 
+# normal x y positions for iterative sorting algorithms
 CARD_X_POS = [400 + SQUARE_SIZE / 2 + GAP * i for i in range(10)]
 CARD_Y_POS = [150, 250, 350, 450, 550]
 
+# x y positions for merge sort
 MERGE_SORT_X_POS = {0: [550 + SQUARE_SIZE * i for i in range(10)],
                     1: [520 + SQUARE_SIZE * i for i in range(5)] +
                        [830 + SQUARE_SIZE * i for i in range(5)],

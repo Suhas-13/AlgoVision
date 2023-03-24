@@ -14,6 +14,7 @@ class NumberCardsHandler:
         self.time_since_rotation = 0
         self.rows = {0: number_cards, 1: [None] * 10, 2: [None] * 10, 3: [None] * 10, 4: [None] * 10}
 
+        # projectile variables
         self.g = 2
         self.timer = 0
         self.r = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0}
@@ -36,6 +37,7 @@ class NumberCardsHandler:
         gap = index2 - index1
         if self.rotating and gap != 0:
             self.timer += 0.3
+            # calculate the distance from the projectile motion equation
             distance = (self.v0[gap] * cos(radians(self.angles[gap])) * self.timer,
                         self.v0[gap] * sin(radians(self.angles[gap])) * self.timer - 0.5 * self.g * self.timer ** 2)
 
@@ -44,6 +46,7 @@ class NumberCardsHandler:
             card2.x, card2.y = CARD_X_POS[index2] - \
                                round(distance[0]), CARD_Y_POS[2] - round(distance[1])
 
+    # check if the rotation is complete, and then reset the rotation variables
     def check_rotation_complete(self, index1, index2):
         card1, card2 = self.number_cards[index1], self.number_cards[index2]
         if card1.x < CARD_X_POS[index2] + 6 and card1.x > CARD_X_POS[index2] - 6:
@@ -55,6 +58,7 @@ class NumberCardsHandler:
             self.number_cards[index1], self.number_cards[index2] = card2, card1
             self.prev_next_disabled = False
 
+    # if undo or redo is clicked, moves the cards back to their original position
     def undo_rotation_immediately(self, index1, index2, reverse=False):
         card1, card2 = self.number_cards[index1], self.number_cards[index2]
         if reverse:
@@ -70,9 +74,11 @@ class NumberCardsHandler:
         self.prev_next_disabled = True
         self.rotation(index1, index2)
 
+    # functions for merge sort
     def copy_and_divide(self, index1, index2, controller):
         current_row = self.number_cards[index1].row
         for i in range(index1, index2 + 1):
+            # move the cards to the next row
             self.number_cards[i].row += 1
             new_card = self.number_cards[i].copy()
             new_card.row = current_row + 1
@@ -84,18 +90,21 @@ class NumberCardsHandler:
         current_row = self.number_cards[index1].row
         num_card1, num_card2 = self.rows[current_row - 1][index1], self.rows[current_row][index2]
         self.check_merge_complete(index1, num_card1, num_card2, controller)
-        sign = 1 if num_card2.x > num_card1.x else -1
 
+        # the moving animation for merging the cards
+        sign = 1 if num_card2.x > num_card1.x else -1
         if self.rotating:
             num_card2.x -= self.timer * sign
             num_card2.y += self.timer * self.slope * sign
             self.timer += 0.01
 
+    # calculate the slope of the line between the two cards
     def set_slope(self, index1, index2):
         current_row = self.number_cards[index1].row
         num_card1, num_card2 = self.rows[current_row - 1][index1], self.rows[current_row][index2]
         self.slope = - (num_card2.y - num_card1.y) / (num_card2.x - num_card1.x)
 
+    # check if the merge is complete, and then reset the rotation variables
     def check_merge_complete(self, index1, num_card1, num_card2, controller):
         if abs(num_card2.x - num_card1.x) < 1:
             num_card2.moveto(num_card1.x, num_card1.y)
@@ -106,6 +115,7 @@ class NumberCardsHandler:
             controller.surfaces.remove(num_card2)
             self.number_cards[index1].row -= 1
 
+    # clear merged completed cards
     def clear(self, index1, index2):
         current_row = self.number_cards[index1].row
         for i in range(index1, index2 + 1):
@@ -143,6 +153,7 @@ class Model:
             if num_card.text != str(self.controller.numbers[idx]):
                 self.controller.numbers[idx] = num_card.text
 
+    # get the moves and set up stack for undo and redo
     def start(self):
         for num_card in self.num_cards_handler.number_cards:
             num_card.unhighlight()
@@ -162,6 +173,7 @@ class Model:
 
         self.next_move_stack = list(reversed(self.moves))
         self.pause = False
+        # dont allow to change the numbers while sorting
         self.controller.allow_to_change = False
 
     def get_last_move(self):
@@ -226,6 +238,7 @@ class Model:
         if self.controller.allow_to_change:
             self.change_numbers()
 
+        # situations where we dont want to do anything
         if self.manual_mode and self.get_last_move() is not None:
             current_move = self.get_last_move()
             self.num_cards_handler.rotation(
@@ -240,23 +253,30 @@ class Model:
         if self.num_cards_handler.time_since_rotation < 10:
             return
 
+        # if the animation is done, we can process the next move
         if not self.num_cards_handler.rotating:
             if len(self.next_move_stack) == 0:
                 self.pause = True
                 for card in self.num_cards_handler.number_cards:
                     card.unhighlight()
                 return
+
+            # store moves for redo and undo
             prev_move = self.get_last_move()
             current_move = self.next_move_stack.pop()
             self.prev_move_stack.append(current_move)
+
+            # do different moves, compare, swap, divide, merge and highlight
             if prev_move is not None and prev_move[0] == NumberCardOperations.COMPARE:
                 if current_move[0] == NumberCardOperations.SWAP:
                     pygame.time.delay(200)
                 self.clear_highlight(prev_move)
+
             if current_move[0] == NumberCardOperations.SWAP:
                 self.num_cards_handler.move_numbers(
                     current_move[1], current_move[2])
                 self.num_cards_handler.rotating = True
+
             elif current_move[0] == NumberCardOperations.COMPARE:
                 self.highlight(current_move)
                 pygame.time.delay(400)
@@ -273,6 +293,8 @@ class Model:
             elif current_move[0] == NumberCardOperations.CLEAR:
                 self.num_cards_handler.clear(current_move[1], current_move[2])
                 pygame.time.delay(150)
+
+        # if the animation is not done, we need to continue it
         else:
             current_move = self.get_last_move()
             if current_move[0] == NumberCardOperations.SWAP:

@@ -4,6 +4,9 @@ from random import randint, shuffle
 import random
 
 
+# sorting algorithms animation framework for every sorting algorithm
+
+# abstract class for sorting algorithms moves, which can be called by sorting algorithms
 class NumberCardOperations:
     SWAP: int = 1
     COMPARE: int = 2
@@ -53,6 +56,7 @@ class SortingAlgorithm(ABC):
         return moves
 
 
+# all sorting algorithms run first and then return a list of the moves
 class SelectionSort(SortingAlgorithm):
     def __init__(self, array):
         super().__init__(array)

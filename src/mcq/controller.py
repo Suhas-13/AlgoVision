@@ -1,12 +1,8 @@
-import pygame
-import sys
-import time
-
-from .model import Model
 from .view import *
+from .model import *
+import json
+import sys
 
-
-# from user import *
 
 class Controller:
     def __init__(self, questionNumber=1, mode="bubble", points=0):
@@ -26,12 +22,12 @@ class Controller:
 
         self.answered = False
 
+    # get all of the questions from json file
     def openFile(self):
         file = open("./datas/mcq.json", "r")
         database = json.load(file)
         file.close()
         return database
-
 
     def register_answer_boxes(self, answer):
         self.surfaces.append(answer)
@@ -49,13 +45,13 @@ class Controller:
             if self.init_click:
                 break
 
+            # check if the answer is clicked, and the correctness of the answer
             if answer.check_mouseClick():
-                # prevent automatic click
-                
                 if answer.correct:
                     self.addPoint()
                     answer.click = False
                     answer.correctAnswer()
+                    # set self.answered to True to prepare for the next question
                     self.answered = True
                     break
                 if not answer.correct:
@@ -77,15 +73,14 @@ class Controller:
             self.check_exit()
             self.check_answerBox_click()
 
+            # update the screen
             self.view.update()
             for surface in self.surfaces:
                 surface.draw(self.view.canvas)
-
             self.point_box.draw(self.view.canvas)
-
-            self.model.update()
             pygame.display.update()
 
+            # prepare for the next question
             if self.answered:
                 self.answered = False
                 self.point_box.update(f"Points: {self.points} / {self.questionNumber}")

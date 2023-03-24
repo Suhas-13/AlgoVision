@@ -1,8 +1,6 @@
 from .constants import *
 from .controller import *
-# from user import *
 import pygame
-import json
 import random
 
 pygame.init()
@@ -66,6 +64,7 @@ class AnswerButton(Text):
         if pygame.mouse.get_pressed()[0] is False:
             self.clicked = False
 
+    # functions to display correct or incorrect answer, by changing the border color
     def correctAnswer(self):
         self.border = pygame.Surface(
             (self.rect_size[0] + 10, self.rect_size[1] + 10))
@@ -126,11 +125,13 @@ class View:
             )
             yCounter += 100
 
+    # get the question from the database, for rendering on the screen
     def choose_question(self):
         data = self.controller.database
         q = data[self.controller.mode][self.controller.questionNumber - 1]["question"]
         return q
 
+    #  get four answers
     def choose_answer(self, n):
         data = self.controller.database
         if n == 0:

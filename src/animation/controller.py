@@ -1,13 +1,12 @@
 import pygame
-import sys
 from .model import Model
 from .view import View
 from .enums import Algorithm
-import src.menu as menu
 
 
 class Controller:
-    def __init__(self, algorithm=Algorithm.BUBBLE_SORT):
+    def __init__(self, algorithm):
+        # all elements in the window
         self.numbers = ["7", "1", "8", "3", "5", "9", "4", "10", "6", "2"]
         self.code_blocks = []
         self.buttons = []
@@ -27,17 +26,16 @@ class Controller:
 
     def reset_all_cards(self):
         for i in range(10):
-            # self.number_cards[i].text = self.reset_numbers[i]\
             self.model.num_cards_handler.number_cards[i].clicked = False
             self.model.num_cards_handler.number_cards[i].update(self.reset_numbers[i])
             self.model.num_cards_handler.number_cards[i].unhighlight()
             self.model.num_cards_handler.number_cards[i].typable = False
             self.model.num_cards_handler.number_cards[i].highlighted = False
 
-
     def update_reset_numbers(self):
         self.reset_numbers = self.numbers.copy()
 
+    # register all elements in the window
     def register_number_cards(self, number_card):
         number_card.clicked = False
         self.model.num_cards_handler.number_cards.append(number_card)
@@ -84,7 +82,6 @@ class Controller:
                     self.model.reset()
                 elif button.text == "Back":
                     self.quit = True
- 
 
     def check_change_numbers(self, event):
         for number_card in self.model.num_cards_handler.number_cards:
@@ -97,6 +94,7 @@ class Controller:
                 self.numbers = [number_card.text for number_card in self.model.num_cards_handler.number_cards]
                 self.update_reset_numbers()
 
+    # event handling, for quit, button click, and number card change
     def check_events(self):
         for event in pygame.event.get():
             pygame.event.clear()
@@ -117,7 +115,6 @@ class Controller:
 
     def run(self):
         while True:
-            # print(pygame.mouse.get_pressed()[0])
             self.check_events()
             if self.quit:
                 break
